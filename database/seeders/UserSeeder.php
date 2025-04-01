@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
     {
         User::factory()->role(RolesEnum::ROOT->value)->create([
             'email' => 'winnerk088@gmail.com',
+            'username' => 'abdwhb',
         ]);
         User::factory()->role(RolesEnum::SUPERADMIN->value)->create([
             'email' => 'admin@' . config('app.site_domain'),

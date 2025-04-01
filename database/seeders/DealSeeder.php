@@ -17,7 +17,7 @@ class DealSeeder extends Seeder
     {
         ini_set('memory_limit', '512M'); // Augmente temporairement la mémoire
 
-        $maxDeals = config('app.env') === 'local' ? 100 : 5000;
+        $maxDeals = config('app.env') === 'local' ? 100 : 10000;
         $this->seedDeals('artist_data.json', 'artist', $maxDeals);
         $this->seedDeals('track_data.json', 'track', $maxDeals);
         $this->attachReviews();
