@@ -34,7 +34,7 @@ class SiteSettingSeeder extends Seeder
         // create system settings
         SiteSetting::create([
             'enable_welcome_bonus' => false,
-            'enable_referral_bonus' => true,
+            'enable_referal_bonus' => true,
             'announcement' => 'Dear users, please note that our workbench operates from 10:00 AM to 23:00 PM.',
             'tcs' => fake()->text(5000),
             'about_us' => fake()->text(1000),
