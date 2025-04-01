@@ -199,7 +199,15 @@ trait ValidationRules
     {
         if ($action == 'update') {
             return [
-                'announcement' => 'required|string',
+                'base_currency' => 'required|string',
+                'profit_ratio' => 'required|numeric',
+                'max_deals' => 'required|integer',
+                'welcome_bonus' => 'nullable|numeric',
+                'enable_welcome_bonus' => 'required|boolean',
+                'referal_bonus' => 'nullable|numeric',
+                'enable_referal_bonus' => 'required|boolean',
+                'telegram' => 'required|boolean',
+                'announcement' => 'nullable|string',
                 'tcs' => 'nullable|string',
                 'about_us' => 'nullable|string',
                 'faq' => 'nullable|string',

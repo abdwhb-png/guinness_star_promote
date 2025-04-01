@@ -17,9 +17,9 @@ return new class extends Migration
             $table->integer('max_deals')->default(ConfigEnum::MAX_DEALS);
             $table->decimal('profit_ratio')->default(ConfigEnum::DEFAULT_PROFIT_RATIO);
             $table->string('base_currency')->default(ConfigEnum::DEFAULT_CURRENCY);
-            $table->decimal('welcome_bonus')->default(ConfigEnum::WELCOME_BONUS);
+            $table->decimal('welcome_bonus')->nullable()->default(ConfigEnum::WELCOME_BONUS);
             $table->boolean('enable_welcome_bonus')->default(false);
-            $table->decimal('referal_bonus')->default(ConfigEnum::REFERRAL_BONUS);
+            $table->decimal('referal_bonus')->nullable()->default(ConfigEnum::REFERRAL_BONUS);
             $table->boolean('enable_referal_bonus')->default(false);
             $table->integer('profit_max_on_first')->default(ConfigEnum::PROFIT_MAX_ON_FIRST);
             $table->string('availability_time')->default('10:00 to 23:00 (UTC-05:00)');

@@ -109,7 +109,7 @@ class AdminController extends BaseController
     {
         $validated = $request->validate($this->settingRules('update'));
 
-        $item->update($request->all());
+        $item->update($validated);
 
         return back(303)->with('status', 'Setting has been updated');
     }
