@@ -4,17 +4,14 @@ namespace App\Http\Controllers;
 
 use App\NotifData;
 use App\Models\Deal;
-use App\Models\User;
 use App\Trait\GetTrait;
-
 use App\Enums\StatusesEnum;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-
-use App\Trait\ValidationRules;;
+use App\Trait\ValidationRules;
 
 use App\Events\AccountDealEvent;
-use App\Http\Helpers\UtilsHelper;
+use App\Helpers\UtilsHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\DefaultNotif;
