@@ -11,6 +11,7 @@ const props = defineProps({
 });
 
 const yesNo = [{ label: 'Yes', value: 1 }, { label: 'No', value: 0 }];
+const currency = (props.datas.base_currency || 'FCFA') + ' ';
 const form = useForm(props.datas);
 
 const submit = () => {
@@ -25,8 +26,6 @@ const submit = () => {
         },
     });
 };
-
-const editorHeight = ref(200);
 </script>
 
 <template>
@@ -53,8 +52,8 @@ const editorHeight = ref(200);
                 </div>
                 <div class="mb-4">
                     <h5 class="fw-bold">Welcome bonus</h5>
-                    <InputNumber :min="0" :minFractionDigits="2" prefix="$ " locale="en-US" v-model="form.welcome_bonus"
-                        fluid />
+                    <InputNumber :min="0" :minFractionDigits="2" :prefix="currency" locale="en-US"
+                        v-model="form.welcome_bonus" fluid />
                 </div>
                 <div class="mb-4">
                     <h5 class="fw-bold">Enable referal bonus ?</h5>
@@ -63,12 +62,13 @@ const editorHeight = ref(200);
                 </div>
                 <div class="mb-4">
                     <h5 class="fw-bold">Referal bonus</h5>
-                    <InputNumber :min="0" :minFractionDigits="2" prefix="$ " locale="en-US" v-model="form.referal_bonus"
-                        fluid />
+                    <InputNumber :min="0" :minFractionDigits="2" :prefix="currency" locale="en-US"
+                        v-model="form.referal_bonus" fluid />
                 </div>
                 <div class="mb-4 hidden">
                     <h5 class="fw-bold">Max profit on trial</h5>
-                    <InputNumber :min="0" :minFractionDigits="2" prefix="$ " v-model="form.profit_max_on_first" fluid />
+                    <InputNumber :min="0" :minFractionDigits="2" :prefix="currency" v-model="form.profit_max_on_first"
+                        fluid />
                 </div>
                 <div class="mb-4">
                     <h5 class="fw-bold">Enable telegram notif ?</h5>

@@ -1,47 +1,26 @@
 <template>
     <div data-slider ref="slider" class="relative">
-        <div
-            class="swiper-wrapper"
-            ref="wrapper"
-            data-slider-wrapper
-            data-current-page="0"
-            :style="{ '--items': showCount }"
-        >
+        <div class="swiper-wrapper" ref="wrapper" data-slider-wrapper data-current-page="0"
+            :style="{ '--items': showCount }">
             <slot />
         </div>
 
         <!-- pagination indicator -->
-        <div
-            v-if="withPagination"
-            class="absolute bottom-20 right-0 left-0 flex justify-center items-center z-30"
-        >
+        <div v-if="withPagination" class="absolute bottom-20 right-0 left-0 flex justify-center items-center z-30">
             <div class="bg-g60 text-g30 py-1 px-4 rounded-full text-sm">
-                <span class="curentSlideIndex">{{ `${currentPage + 1} ` }}</span
-                >/
+                <span class="curentSlideIndex">{{ `${currentPage + 1} ` }}</span>/
                 <span id="productSliderLength">{{ totalItems }}</span>
             </div>
         </div>
-        <span
-            class="swiper-notification"
-            aria-live="assertive"
-            aria-atomic="true"
-        ></span>
+        <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
 
         <!-- pagination buttons -->
-        <button
-            :disabled="!stop"
-            class="rooms_navigation shadow-2 bg-sky-500 p-1.5 rounded-full flex justify-center items-center"
-            data-slider-prev
-        >
+        <UiButton class="rooms_navigation shadow-2" :disabled="!stop" data-slider-prev>
             <i class="ph ph-arrow-circle-left"></i>
-        </button>
-        <button
-            :disabled="!stop"
-            class="rooms_navigation shadow-2 bg-sky-500 p-1.5 rounded-full flex justify-center items-center"
-            data-slider-next
-        >
+        </UiButton>
+        <UiButton :disabled="!stop" class="rooms_navigation shadow-2" data-slider-next>
             <i class="ph ph-arrow-circle-right"></i>
-        </button>
+        </UiButton>
     </div>
 </template>
 
@@ -340,11 +319,13 @@ export default {
         margin: -1rem;
         scroll-padding-inline: 0;
     }
+
     .swiper-slide {
         scroll-snap-align: center;
         margin-right: 0;
         min-width: 250px;
     }
+
     .rooms_navigation {
         display: none;
     }

@@ -105,7 +105,7 @@ import mapValues from 'lodash/mapValues';
 import dayjs from "dayjs";
 import { Info, Loader2 } from "lucide-vue-next";
 import SearchFilter from "./SearchFilter.vue";
-import Pagination from "./Pagination.vue";
+import Pagination from "../shared/Pagination.vue";
 import {
     DropdownMenuRadioGroup,
 } from '@/components/ui/dropdown-menu'
@@ -158,11 +158,14 @@ const props = defineProps({
 const data = ref<any[]>([]);
 const loading = ref(false);
 const form = reactive({
-    search: props.dataFilters.search,
-    per_page: props.paginated.per_page,
-    sort: props.dataFilters.sort,
-    [props.filterKey]: props.dataFilters[props.filterKey],
+    search: props.dataFilters?.search,
+    per_page: props.paginated?.per_page,
+    sort: props.dataFilters?.sort,
 });
+
+if (props.filterKey) {
+    form[props.filterKey] = props.dataFilters[props.filterKey];
+}
 
 const filters = ref<Record<string, any>>(props.filters ?? {});
 
@@ -175,15 +178,14 @@ const initFilters = () => {
 };
 initFilters();
 
-const onSort = (event) => {
+const onSort = (event: any) => {
     form.sort = {
         field: event.sortField,
         order: event.sortOrder === 1 ? 'asc' : 'desc'
     };
 };
 
-
-const onFilter = (event) => {
+const onFilter = (event: any) => {
     // console.log(event.filters);
 };
 
@@ -192,13 +194,12 @@ const reset = () => {
 };
 
 watch(() => props.paginated?.data, (newData) => {
-    data.value = Array.isArray(newData)
-        ? newData.map((item) => ({
-            ...item,
-            created_at: parseDate(item.created_at),
-            updated_at: parseDate(item.updated_at, 'humanReadable'),
-        }))
-        : [];
+    const tab = Array.isArray(newData) ? newData : [];
+    data.value = tab.map((item: any) => ({
+        ...item,
+        created_at: parseDate(item.created_at),
+        updated_at: parseDate(item.updated_at, 'humanReadable'),
+    }));
 }, { immediate: true });
 
 watch(form,

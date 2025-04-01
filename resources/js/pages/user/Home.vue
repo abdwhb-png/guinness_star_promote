@@ -1,5 +1,5 @@
 <template>
-    <UserLayout title="Home">
+    <UserLayout title="Accueil">
         <!-- Slider Section Start -->
         <div class="px-4 pt-6">
             <HomeSlider />
@@ -14,11 +14,7 @@
 
         <!-- Announcement Section Start -->
         <div class="py-4" v-if="$page.props.config.settings.announcement">
-            <van-notice-bar
-                :scrollable="true"
-                :text="$page.props.config.settings.announcement"
-                left-icon="volume-o"
-            />
+            <van-notice-bar :scrollable="true" :text="$page.props.config.settings.announcement" left-icon="volume-o" />
         </div>
         <!-- Announcement Section End -->
 

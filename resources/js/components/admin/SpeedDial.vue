@@ -1,16 +1,21 @@
 <style>
 #speeddial {
     position: fixed;
+    top: calc(50% - 2rem);
     right: 20px;
-    top: calc(30% - 2rem);
     z-index: 9999;
 }
 </style>
 
 <template>
     <div>
-        <SpeedDial id="speeddial" :model="items" :radius="80" direction="up"
-            :buttonProps="{ severity: 'contrast', rounded: true }" :tooltipOptions="{ position: 'left' }" />
+        <SpeedDial id="speeddial" :model="items" :radius="80" type="semi-circle" direction="left"
+            :buttonProps="{ severity: 'contrast', rounded: true }" />
+
+        <!-- appearance dialog -->
+        <Dialog v-model:visible="appearance" modal header="Change the site appearance" :style="{ width: '25rem' }">
+            <AppearanceTabs />
+        </Dialog>
 
         <!-- about me dialog -->
         <Dialog v-model:visible="aboutMe" modal header="Check out your information" :style="{ width: '25rem' }">
@@ -64,6 +69,7 @@ import { useUserStore } from "@/stores/user";
 import { useToast } from "primevue/usetoast";
 import SpeedDial from "primevue/speeddial";
 import CopyBtn from "../shared/CopyBtn.vue";
+import AppearanceTabs from '@/components/AppearanceTabs.vue';
 
 const page = usePage();
 const user = page.props.auth.user;
@@ -74,7 +80,32 @@ const loading = ref(false);
 const mailNotification = ref(user.account.mail == 1 ? true : false);
 
 const aboutMe = ref(false);
+const appearance = ref(false);
 const isMobile = ref(false);
+
+const items = ref([
+    {
+        label: "Reload",
+        icon: "pi pi-refresh",
+        command: () => {
+            window.location.reload();
+        },
+    },
+    {
+        label: "About Me",
+        icon: "pi pi-user",
+        command: () => {
+            aboutMe.value = true;
+        },
+    },
+    {
+        label: "Appearance",
+        icon: "pi pi-palette",
+        command: () => {
+            appearance.value = true;
+        },
+    },
+]);
 
 onMounted(() => {
     isMobile.value = /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
@@ -98,21 +129,4 @@ async function changeMailNotif() {
             loading.value = false;
         });
 }
-
-const items = ref([
-    {
-        label: "Reload",
-        icon: "pi pi-refresh",
-        command: () => {
-            window.location.reload();
-        },
-    },
-    {
-        label: "About Me",
-        icon: "pi pi-user",
-        command: () => {
-            aboutMe.value = true;
-        },
-    },
-]);
 </script>

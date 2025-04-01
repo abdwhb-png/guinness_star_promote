@@ -8,6 +8,7 @@
     margin: 0 5px;
     border-radius: 1rem;
 }
+
 .top-nav.scrolled {
     top: 1%;
     box-shadow: inset 0 1px 1px 1px rgba(172, 171, 171, 0.9),
@@ -20,28 +21,17 @@
 </style>
 
 <template>
-    <div
-        class="flex justify-between items-center px-4"
-        :class="['sticky', 'top-nav', { scrolled: isScrolled }]"
-    >
-        <div
-            class="flex items-center justify-center size-10 rounded-full bg-white cursor-pointer"
-            @click="showAccount = true"
-        >
+    <div class="flex justify-between items-center px-4" :class="['sticky', 'top-nav', { scrolled: isScrolled }]">
+        <div class="flex items-center justify-center size-10 rounded-full bg-white cursor-pointer"
+            @click="showAccount = true">
             <i class="ph-fill ph-piggy-bank text-g40 text-2xl"></i>
         </div>
 
-        <h1 class="display-3 text-g60 font-bold">{{ title }}</h1>
+        <h1 class="text-2xl">{{ title }}</h1>
 
-        <div
-            class="relative rounded-full cursor-pointer"
-            @click="getNotifications"
-        >
+        <div class="relative rounded-full cursor-pointer" @click="getNotifications">
             <div class="absolute top-0.5 right-0 bg-white p-0.5 rounded-full">
-                <div
-                    class="size-2 rounded-full"
-                    :class="userStore.unreadCount ? 'bg-sky-500' : 'bg-g40 '"
-                ></div>
+                <div class="size-2 rounded-full" :class="userStore.unreadCount ? 'bg-sky-500' : 'bg-g40 '"></div>
             </div>
             <i class="ph-fill ph-bell-simple text-g40 text-2xl"></i>
         </div>
@@ -55,11 +45,7 @@
         </BottomModal>
     </van-popup>
 
-    <van-popup
-        v-model:show="showNotifs"
-        position="right"
-        :style="{ width: '100%', height: '100%' }"
-    >
+    <van-popup v-model:show="showNotifs" position="right" :style="{ width: '100%', height: '100%' }">
         <RightModal title="Notifications" @close="showNotifs = false">
             <template #content>
                 <Notifications />

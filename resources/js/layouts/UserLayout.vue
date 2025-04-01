@@ -98,7 +98,7 @@ onMounted(() => {
                 <div class="flex h-8 w-8 items-center justify-center">
                     <AppLogoIcon class="size-8 fill-current text-black dark:text-white" />
                 </div>
-                <span class="text-2xl" translate="no">{{ page.props.name }}</span>
+                <span class="display-3 text-g60 font-bold" translate="no">{{ page.props.name }}</span>
             </a>
             <TopSection :title="props.title || page.props.name" />
 

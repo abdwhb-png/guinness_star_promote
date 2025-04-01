@@ -11,10 +11,10 @@
         </div>
 
         <!-- Boutons de pagination -->
-        <MyPagination v-if="true" :paginated="paginated" />
-        <div v-else class="flex justify-center items-center gap-4 order-1 md:order-2">
+        <div class="flex flex-wrap justify-center items-center gap-4 order-1 md:order-2">
             <span data-datatable-info="true">{{ paginationInfo }}</span>
-            <div class="pagination">
+            <PaginationBtns v-if="true" :meta="paginatedMeta" />
+            <div v-else class="pagination">
                 <div class="pagination space-x-2">
                     <!-- Bouton Précédent -->
                     <Link class="btn" :class="{ disabled: !paginated.prev_page_url }"
@@ -22,24 +22,12 @@
                     <i class="ki-outline ki-black-left rtl:transform rtl:rotate-180"></i>
                     </Link>
 
-                    <UiButton v-if="!showEllipsis" variant="outline" class="btn" as-child>
-                        <Link preserve-scroll prefetch cache-for="1m" :href="paginated.first_page_url ?? ''" class="rt">
-                        ...
-                        </Link>
-                    </UiButton>
-
                     <!-- Affichage dynamique des pages -->
-                    <UiButton v-for="link in visiblePageNumbers" :key="link.label" as-child :class="{
+                    <UiButton v-for="link in filteredLinks" :key="link.label" as-child :class="{
                         'active disabled': link.active,
-                    }" :variant="link.active ? '' : 'secondary'">
+                    }" :variant="link.active ? 'default' : 'outline'">
                         <Link preserve-scroll prefetch cache-for="1m" :href="link.url ?? ''" class="rt">
                         {{ link.label }}
-                        </Link>
-                    </UiButton>
-
-                    <UiButton v-if="showEllipsis" variant="outline" class="btn" as-child>
-                        <Link preserve-scroll prefetch cache-for="1m" :href="paginated.last_page_url ?? ''" class="rt">
-                        ...
                         </Link>
                     </UiButton>
 
@@ -55,8 +43,8 @@
 </template>
 
 <script setup lang="ts">
-import MyPagination from "@/components/shared/MyPagination.vue";
-import { ref, computed } from "vue";
+import PaginationBtns from "@/components/shared/PaginationBtns.vue";
+import { ref, computed, watch } from "vue";
 import { LaravelPagination } from "@/types";
 import { itemsPerPage } from "@/utils/dataTable";
 
@@ -82,17 +70,23 @@ const props = defineProps({
 });
 
 const loading = ref(false);
+const paginatedMeta = ref();
 
-const currentPage = computed(() => props.paginated.current_page);
+const currentPage = computed(() => paginatedMeta.value?.current_page);
+
+watch(() => props.paginated, () => {
+    const { data, ...meta } = props.paginated;
+    paginatedMeta.value = meta;
+}, { immediate: true });
 
 // Calcul des indices de début et de fin des éléments affichés
 const from = computed(
-    () => (currentPage.value - 1) * props.paginated.per_page + 1,
+    () => (currentPage.value - 1) * paginatedMeta.value?.per_page + 1,
 );
 const to = computed(() =>
     Math.min(
-        currentPage.value * props.paginated.per_page,
-        props.paginated.total,
+        currentPage.value * paginatedMeta.value?.per_page,
+        paginatedMeta.value?.total,
     ),
 );
 const paginationInfo = computed(
@@ -100,7 +94,7 @@ const paginationInfo = computed(
 );
 
 // Filtrer les liens de pagination pour exclure "Précédent" et "Suivant"
-const filteredLinks = computed(() => props.paginated.links?.slice(1, -1));
+const filteredLinks = computed(() => paginatedMeta.value?.links?.slice(1, -1));
 
 // Limiter à 5 pages visibles à la fois
 const visiblePageNumbers = computed(() => {
@@ -111,11 +105,5 @@ const visiblePageNumbers = computed(() => {
     let end = start + props.maxVisiblePages;
 
     return filteredLinks.value?.slice(start, end);
-});
-
-// Show ellipsis when there are more pages than visible
-const showEllipsis = computed(() => {
-    return filteredLinks.value?.length > props.maxVisiblePages &&
-        currentPage.value < ((filteredLinks.value?.length - Math.floor(props.maxVisiblePages / 2) - 1));
 });
 </script>

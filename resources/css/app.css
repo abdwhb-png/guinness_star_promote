@@ -9,13 +9,17 @@
 
 .p-scrolltop {
     z-index: 9999 !important;
-    bottom: 80px !important;
-    margin-right: calc((100% - var(--side-width, 430px)) / 2) !important;
+    bottom: 110px !important;
+    right: 40px !important;
+    margin-right: calc((100% - var(--side-width, 500px)) / 2) !important;
+    background-color: #000 !important;
+    border-color: #000 !important;
+    color: #fff !important;
 }
 
 @media (max-width: 400px) {
     .p-scrolltop {
-        margin-right: calc((120% - var(--side-width, 430px)) / 2) !important;
+        margin-right: calc((130% - var(--side-width, 500px)) / 2) !important;
     }
 }
 

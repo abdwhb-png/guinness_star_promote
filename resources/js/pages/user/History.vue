@@ -1,5 +1,5 @@
 <template>
-    <UserLayout title="History">
+    <UserLayout title="Historique">
         <div class="p-4">
             <van-tabs v-model:active="activeName" @click-tab="onClickTab">
                 <van-tab title="Deals" name="tasks">
