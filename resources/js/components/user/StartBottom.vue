@@ -16,13 +16,18 @@
             </Message>
             <div class="flex justify-between items-center gap-3 buyNowModalOpen">
                 <div class="w-full">
-                    <Link :href="route('dashboard')" class="primaryButtonOutline">
+                    <Link :href="route('dashboard')" class="primaryButtonOutline flex justify-center items-center">
+                    <i class="ph ph-house text-lg me-0.5"></i>
                     Back to Home
                     </Link>
                 </div>
                 <div class="w-full" v-if="deal">
-                    <Button :disabled="!deal || $page.props.auth.user.account.isFrozed" label="Continue"
-                        class="w-full primaryButton" unstyled @click="showModal = true" />
+                    <Button :disabled="!deal || $page.props.auth.user.account.isFrozed"
+                        class="w-full primaryButton flex justify-center items-center" unstyled
+                        @click="showModal = true">
+                        Evaluate
+                        <i class="ph ph-star text-lg ml-0.5"></i>
+                    </Button>
                 </div>
             </div>
         </div>

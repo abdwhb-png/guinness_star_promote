@@ -88,14 +88,14 @@ const submit = () => {
 
 <template>
     <div class="flex justify-between items-center gap-2 w-full">
-        <button @click="start('recharge')" class="primaryButton w-full !text-sm">
-            <i class="ph ph-hand-withdraw me-0.5"></i> Recharge
+        <button @click="start('recharge')" class="primaryButton w-full !text-sm flex justify-center items-center">
+            <i class="ph ph-hand-withdraw text-lg me-0.5"></i> Recharge
         </button>
         <AskForPassword class="w-full" pwd-type="withdrawal" title="Withdrawal Password"
             content="For your security, please enter your withdrawal password to continue."
             @confirmed="start('withdrawal')">
-            <button class="primaryButtonOutline w-full !text-sm mt-4">
-                <i class="ph ph-hand-deposit me-0.5"></i> Withdraw
+            <button class="primaryButtonOutline w-full !text-sm mt-4 flex justify-center items-center">
+                <i class="ph ph-hand-deposit text-lg me-0.5"></i> Withdraw
             </button>
         </AskForPassword>
     </div>

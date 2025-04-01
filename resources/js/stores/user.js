@@ -41,6 +41,7 @@ export const useUserStore = defineStore("userStore", {
     state: () => ({
         ...createEntityState(["user", "sessions", "notifications"]),
         unreadCount: 0,
+        showAccount: false,
     }),
 
     getters: {

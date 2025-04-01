@@ -10,6 +10,8 @@ import BottomNav from "@/components/user/BottomNav.vue";
 import HelpCenter from "@/components/user/HelpCenter.vue";
 import Tcs from "@/components/user/Tcs.vue";
 import AppLogoIcon from "@/components/AppLogoIcon.vue";
+import BottomModal from "@/components/user/BottomModal.vue";
+import BalanceInfo from "@/components/user/BalanceInfo.vue";
 
 const props = defineProps({
     title: String,
@@ -107,6 +109,14 @@ onMounted(() => {
             <slot name="bottom">
                 <BottomNav />
             </slot>
+
+            <van-popup v-model:show="userStore.showAccount" round>
+                <BottomModal title="Your balance info" @close="userStore.showAccount = false">
+                    <template #content>
+                        <BalanceInfo :account="$page.props.auth.user.account" />
+                    </template>
+                </BottomModal>
+            </van-popup>
         </main>
         <!-- END AUTH -->
     </van-config-provider>

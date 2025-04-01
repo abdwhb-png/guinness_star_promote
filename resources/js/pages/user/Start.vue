@@ -42,7 +42,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <UserLayout title="Start">
+    <UserLayout title="Rating">
         <template #bottom>
             <StartBottom :show-loader="showLoader" :deal="deal" @submited="getDeal()" />
         </template>
@@ -68,7 +68,7 @@ onMounted(async () => {
             <!-- deal images -->
             <div class="pt-8 px-4">
                 <div class="flex flex-col items-center gap-2">
-                    <span class="text-xl font-medium">Click on continue</span>
+                    <span class="text-xl font-medium">Evaluate this {{ deal?.category }}</span>
                     <span
                         class="slidedown-icon h-8 w-8 bg-black text-white rounded-full inline-flex items-center justify-center">
                         <i class="pi pi-arrow-down" />

@@ -23,7 +23,7 @@
 <template>
     <div class="flex justify-between items-center px-4" :class="['sticky', 'top-nav', { scrolled: isScrolled }]">
         <div class="flex items-center justify-center size-10 rounded-full bg-white cursor-pointer"
-            @click="showAccount = true">
+            @click="userStore.showAccount = true">
             <i class="ph-fill ph-piggy-bank text-g40 text-2xl"></i>
         </div>
 
@@ -37,14 +37,6 @@
         </div>
     </div>
 
-    <van-popup v-model:show="showAccount" round>
-        <BottomModal title="Your balance info" @close="showAccount = false">
-            <template #content>
-                <BalanceInfo />
-            </template>
-        </BottomModal>
-    </van-popup>
-
     <van-popup v-model:show="showNotifs" position="right" :style="{ width: '100%', height: '100%' }">
         <RightModal title="Notifications" @close="showNotifs = false">
             <template #content>
@@ -57,10 +49,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { useUserStore } from "@/stores/user";
-import BottomModal from "@/Components/User/BottomModal.vue";
-import RightModal from "@/Components/User/RightModal.vue";
-import BalanceInfo from "@/Components/User/BalanceInfo.vue";
-import Notifications from "@/Components/User/Notifications.vue";
+import RightModal from "@/components/user/RightModal.vue";
+import Notifications from "@/components/user/Notifications.vue";
 
 defineProps({
     title: {
@@ -69,10 +59,7 @@ defineProps({
 });
 
 const userStore = useUserStore();
-
 const isScrolled = ref(false);
-
-const showAccount = ref(false);
 const showNotifs = ref(false);
 
 const getNotifications = () => {

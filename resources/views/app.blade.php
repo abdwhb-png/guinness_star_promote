@@ -14,9 +14,12 @@
     <link rel="manifest" href="{{ asset('app/manifest.json') }}" />
     <link href="{{ asset('app/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('app/assets/css/swiper.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/fill/style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/regular/style.css') }}" />
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/thin/style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/light/style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/bold/style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/fill/style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/duotone/style.css') }}" />
 
     <!-- Scripts -->
     @routes

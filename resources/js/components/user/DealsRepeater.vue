@@ -97,8 +97,8 @@ const filter = (category) => {
     <div class="">
         <ul
             class="flex justify-start items-center overflow-y-auto text-base font-medium gap-3 pb-2 horizontal-slide productCategoryList">
-            <li v-for="(item, index) in categories" :key="index" class="item" translate="no"
-                :class="{ active: item.active }" @click="filter(item.id)">
+            <li v-for="(item, index) in categories" :key="index" class="item" :class="{ active: item.active }"
+                @click="filter(item.id)">
                 {{ item.name }}
             </li>
         </ul>

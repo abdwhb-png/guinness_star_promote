@@ -5,18 +5,23 @@
 </style>
 
 <script setup>
-import { usePage } from "@inertiajs/vue3";
 import { useUserStore } from "@/stores/user";
 import { computed } from "vue";
 
-const page = usePage();
+const props = defineProps({
+    account: {
+        type: Object,
+        required: true,
+    },
+});
+
 const userStore = useUserStore();
 
-const account = computed(() => userStore.getData("user").account);
+const account = computed(() => userStore.getData("user").account || props.account);
 
 const withCurrency = (amount) => {
     amount = amount || 0;
-    return `${page.props.auth.user.account.currency} ${parseFloat(
+    return `${account.value.currency} ${parseFloat(
         amount
     ).toFixed(2)}`;
 };
@@ -49,10 +54,7 @@ const withCurrency = (amount) => {
             </div>
         </div>
 
-        <div
-            v-if="account.isFrozed"
-            class="p-4 rounded-xl border border-g30 bg-g20"
-        >
+        <div v-if="account.isFrozed" class="p-4 rounded-xl border border-g30 bg-g20">
             <div class="flex justify-between items-center gap-3">
                 <div class="flex justify-start items-center gap-3">
                     <i class="ph-thin text-xl ph-currency-dollar"></i>
@@ -72,12 +74,8 @@ const withCurrency = (amount) => {
                     <p class="text-sm font-medium">Credit Score</p>
                 </div>
 
-                <p
-                    class="font-medium"
-                    :class="
-                        account.isFrozed ? 'invalid-feedback' : 'value-text'
-                    "
-                >
+                <p class="font-medium" :class="account.isFrozed ? 'invalid-feedback' : 'value-text'
+                    ">
                     {{ `${account.credit_score}%` }}
                 </p>
             </div>
