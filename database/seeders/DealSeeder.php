@@ -33,15 +33,15 @@ class DealSeeder extends Seeder
             $data = [];
             foreach ($chunk as $item) {
                 $data[] = [
-                    'unique_id' => $item->id,
-                    'name' => $item->name,
+                    'unique_id' => $item['id'],
+                    'name' => $item['name'],
                     'category' => $category,
-                    'spotify_url' => $item->spotify_url,
-                    'images' => json_encode($item->images), // Convertir en JSON
-                    'tags' => json_encode($category === 'artist' ? $item->genres : $item->available_markets), // JSON
-                    'popularity' => $item->popularity,
-                    'img_url' => $item->images[0]->url ?? null,
-                    'metadata' => json_encode($item->metadata),
+                    'spotify_url' => $item['spotify_url'] ?? null,
+                    'images' => json_encode($item['images'] ?? []), // Convertir en JSON
+                    'tags' => json_encode($category === 'artist' ? ($item['genres'] ?? []) : ($item['available_markets'] ?? [])), // JSON
+                    'popularity' => $item['popularity'] ?? null,
+                    'img_url' => $item['images'][0]['url'] ?? null,
+                    'metadata' => json_encode($item['metadata'] ?? []),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
