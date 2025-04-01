@@ -112,16 +112,19 @@ class DealController extends BaseController
 
     public function deal(): JsonResponse
     {
-        $detailledDeals = request()->user()->detailedDeals();
-        $deposit = request()->user()->account->deposit;
+        $user = request()->user();
+        $detailledDeals = $user->detailedDeals();
+        $deposit = $user->account->deposit;
         $error = null;
 
         if (!$deposit || $deposit <= 0) {
             $error = 'Your account balance is not enough to continue.<br/> Please recharge your account.';
+        } else if (!$user->account->can_work) {
+            $error = 'Votre compte est actuellement suspendu !';
         } else if (!$detailledDeals->counts['pending']) {
-            $error = 'You have completed all the available deals ! <br> Come back tomorrow form more.';
+            $error = 'Vous avez déjà complété toutes les tâches disponibles ! <br> Revenez demain pour plus de tâches.';
         } else if (!$detailledDeals->current) {
-            $error = 'No deal available right now. Try again later.';
+            $error = 'Aucune tâche disponible actuellement. <br> Essayez plus tard.';
         }
 
         if ($error) {

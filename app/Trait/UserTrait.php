@@ -70,6 +70,7 @@ trait UserTrait
             'pending' => $getCount(StatusesEnum::PENDING->value),
             'processing' => $getCount(StatusesEnum::PROCESSING->value),
             'completed' => $getCount(StatusesEnum::COMPLETED->value),
+            'cancelled' => $getCount(StatusesEnum::CANCELLED->value),
         ];
 
         // Separate deals based on frozen status

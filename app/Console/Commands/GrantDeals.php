@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\UtilsHelper;
 use App\Jobs\ResetDealJob;
 use App\Models\UserAccount;
+use App\NotifData;
 use Illuminate\Console\Command;
 
 class GrantDeals extends Command
@@ -27,8 +29,17 @@ class GrantDeals extends Command
      */
     public function handle()
     {
-        UserAccount::whereNotNull('deposit')->get()->each(function ($account) {
-            ResetDealJob::dispatchSync($account);
+        $count = 0;
+        UserAccount::whereNotNull('deposit')->get()->each(function ($account) use (&$count) {
+            if ($account->deposit > 0 && $account->user->detailedDeals()->status['all_done']) {
+                ResetDealJob::dispatch($account);
+                $count++;
+            }
         });
+
+        $notifData = new NotifData($count . ' users have been granted daily new deals');
+        $notifData->setSubject('Automatic deals reset');
+        $notifData->setBody('Users that have been granted deals are users with deposit and precendent deals completed.');
+        UtilsHelper::notifyAdmins($notifData);
     }
 }

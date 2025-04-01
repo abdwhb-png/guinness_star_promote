@@ -51,18 +51,15 @@ class HandleAccountDeal implements ShouldQueue
                         'status' => StatusesEnum::COMPLETED->value,
                     ]);
 
-                    $event->account->silent = true;
+                    $transac = $event->account->giveMoney(
+                        amount: $profit,
+                        type: TransacEnum::COMMISSION->value,
+                    );
 
-                    try {
-                        $transac = $event->account->giveMoney(
-                            amount: $profit,
-                            type: TransacEnum::COMMISSION->value,
-                        );
+                    // Decrement deposit from profit
+                    $event->account->decrement('deposit', $profit);
 
-                        $this->notifyUser($event, $transac);
-                    } finally {
-                        $event->account->silent = false;
-                    }
+                    $this->notifyUser($event, $transac);
                 }
             });
         }
