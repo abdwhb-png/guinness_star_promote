@@ -1,0 +1,95 @@
+@import "app-vars.css";
+@import "base.css";
+@import "vant.css";
+
+.sticky {
+    position: sticky;
+    z-index: 1020;
+}
+
+.p-scrolltop {
+    z-index: 9999 !important;
+    bottom: 80px !important;
+    margin-right: calc((100% - var(--side-width, 430px)) / 2) !important;
+}
+
+@media (max-width: 400px) {
+    .p-scrolltop {
+        margin-right: calc((120% - var(--side-width, 430px)) / 2) !important;
+    }
+}
+
+@media (min-width: 768px) {
+    /* Main Container styles */
+    .container {
+        max-width: 50%;
+        max-width: 500px;
+    }
+}
+
+.pwd-input i {
+    cursor: pointer;
+}
+
+.invalid-feedback {
+    color: rgb(220 38 38);
+}
+
+input,
+select {
+    width: 100%;
+}
+
+#gt_float_wrapper {
+    /* display: none; */
+    bottom: 60px !important;
+}
+
+.gt_float_switcher {
+    font-size: 15px !important;
+}
+
+.gt_float_switcher .gt-selected .gt-current-lang {
+    padding: 5px 8px !important;
+}
+
+.gt_float_switcher img {
+    width: 22px !important;
+}
+
+/* From Uiverse.io by JaydipPrajapati1910 */
+.account-overview-card {
+    background: linear-gradient(0deg, #000, #272727);
+}
+
+#background-beams {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#background-beams svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#background-grad {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: -1;
+    /* max-height: 250px; */
+}
+
+.relative {
+    position: relative;
+}

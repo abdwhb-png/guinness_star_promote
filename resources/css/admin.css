@@ -1,0 +1,12 @@
+@import "base.css";
+
+[x-cloak] {
+    display: none;
+}
+
+
+.p-badge {
+    font-size: 10px !important;
+    min-width: 1rem !important;
+    height: 1rem !important;
+}
