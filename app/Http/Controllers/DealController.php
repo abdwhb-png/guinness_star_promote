@@ -117,7 +117,7 @@ class DealController extends BaseController
         $error = null;
 
         if (!$deposit || $deposit <= 0) {
-            $error = 'Your account balance is not enough to start. Please recharge your account.';
+            $error = 'Your account balance is not enough to continue.<br/> Please recharge your account.';
         } else if (!$detailledDeals->counts['pending']) {
             $error = 'You have completed all the available deals ! <br> Come back tomorrow form more.';
         } else if (!$detailledDeals->current) {
