@@ -17,7 +17,7 @@ class DealSeeder extends Seeder
     {
         ini_set('memory_limit', '512M'); // Augmente temporairement la mémoire
 
-        $maxDeals = config('app.env') === 'local' ? 100 : 10000;
+        $maxDeals = config('app.env') === 'local' ? 100 : 5000;
         $this->seedDeals('artist_data.json', 'artist', $maxDeals);
         $this->seedDeals('track_data.json', 'track', $maxDeals);
         $this->attachReviews();
@@ -26,7 +26,7 @@ class DealSeeder extends Seeder
     private function seedDeals(string $file, string $category, int $maxDeals)
     {
         $jsonData = Storage::disk('local')->get($file);
-        $items = collect(json_decode($jsonData))->take($maxDeals);
+        $items = collect(json_decode($jsonData, true))->take($maxDeals);
 
         // Diviser en lots de 500
         $items->chunk(500)->each(function ($chunk) use ($category) {
