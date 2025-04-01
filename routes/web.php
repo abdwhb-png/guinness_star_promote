@@ -21,7 +21,7 @@ Route::middleware(['auth', 'verified', 'role:' . RolesEnum::USER->value])->group
     Route::controller(DealController::class)->group(function () {
         Route::get('/user-deal', 'deal')->name('user.deal');
         Route::put('/user-deal', 'performDeal')->name('user.deal.perform');
-        Route::post('/deal', 'like')->name('deal.like');
+        Route::post('/deal-like/{deal}', 'like')->name('deal.like');
     });
 });
 
