@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Enums\RolesEnum;
 use App\Enums\TransacEnum;
 use App\Helpers\ConfigHelper;
-use App\Http\Helpers\UtilsHelper;
+use App\Helpers\UtilsHelper;
 use App\Notifications\DefaultNotif;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

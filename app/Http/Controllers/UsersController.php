@@ -28,8 +28,9 @@ class UsersController extends BaseController
                 'phone' => $user->phone,
                 'email' => $user->email,
                 'username' => $user->username,
+                'invitation_code' => $user->account->account_no,
                 'total_balance' => $user->account->balance ? number_format($user->account->balance, 2) : 'none',
-                'frozen_balance' => $user->account->frozen_balance ? number_format($user->account->frozen_balance, 2) : 'none',
+                // 'frozen_balance' => $user->account->frozen_balance ? number_format($user->account->frozen_balance, 2) : 'none',
             ],
             'deals_details' => [
                 'counts' => $detailedDeals->counts,
