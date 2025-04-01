@@ -3,11 +3,11 @@
         <div @click="showQrCode = true" class="flex justify-between items-center p-4 rounded-xl account-overview-card">
             <div class="flex justify-start items-center gap-4">
                 <div class="text-white">
-                    <p class="text-xl font-semibold">
+                    <p class="text-xl font-semibold" translate="no">
                         {{ user.username }}
                     </p>
-                    <p class="text-sm">{{ user.email }}</p>
-                    <CopyBtn :text="accountNo" />
+                    <p class="text-sm" translate="no">{{ user.email }}</p>
+                    <CopyBtn :text="accountNo" translate="no" />
                 </div>
             </div>
 
