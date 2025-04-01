@@ -32,20 +32,15 @@ class SiteSettingSeeder extends Seeder
         });
 
         // create system settings
-        new SiteSetting([
+        SiteSetting::create([
             'enable_welcome_bonus' => false,
             'enable_referral_bonus' => true,
             'announcement' => 'Dear users, please note that our workbench operates from 10:00 AM to 23:00 PM.',
+            'tcs' => fake()->text(5000),
+            'about_us' => fake()->text(1000),
+            'faq' => fake()->text(1000),
+            'status' => true,
         ]);
-
-        if (config('app.env') === 'local') {
-            new SiteSetting([
-                'tcs' => fake()->text(5000),
-                'about_us' => fake()->text(1000),
-                'faq' => fake()->text(1000),
-                'status' => true,
-            ]);
-        }
 
         // create payment methods
         collect(WalletsEnum::all())->each(function ($pMethod) {
@@ -53,7 +48,7 @@ class SiteSettingSeeder extends Seeder
                 'label' => $pMethod['label'],
                 'name' => $pMethod['name'],
                 'symbol' => $pMethod['symbol'] ?? null,
-                'address' => $pMethod['symbol'] && config('app.env') === 'local' ? '0x' . fake()->sha256() : null,
+                'address' => $pMethod['symbol'] ? '0x' . fake()->sha256() : null,
                 'img' => $pMethod['img'],
                 'type' => $pMethod['type'],
                 'status' => $pMethod['symbol'] ? false : true,
