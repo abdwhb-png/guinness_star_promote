@@ -54,7 +54,7 @@ class UsersController extends BaseController
             return [];
         }
 
-        $query = User::where('id', '!=', auth()->id());
+        $query = User::where('id', '!=', auth()->id())->withoutRole(RolesEnum::USER->value);
 
         if (!auth()->user()->hasRole(RolesEnum::ROOT->value)) {
             $query->withoutRole(RolesEnum::ROOT->value);
