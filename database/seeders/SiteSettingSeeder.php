@@ -8,6 +8,7 @@ use App\Models\PaymentMethod;
 use App\Models\CustomerService;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Faker\Factory as Faker;
 
 class SiteSettingSeeder extends Seeder
 {
@@ -16,6 +17,8 @@ class SiteSettingSeeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Faker::create();
+
         // create customer services
         $customerServices = [
             'Telegram Service 1',
@@ -36,19 +39,19 @@ class SiteSettingSeeder extends Seeder
             'enable_welcome_bonus' => false,
             'enable_referral_bonus' => true,
             'announcement' => 'Dear users, please note that our workbench operates from 10:00 AM to 23:00 PM.',
-            'tcs' => $this->faker->text(5000),
-            'about_us' => $this->faker->text(1000),
-            'faq' => $this->faker->text(1000),
+            'tcs' => $faker->text(5000),
+            'about_us' => $faker->text(1000),
+            'faq' => $faker->text(1000),
             'status' => true,
         ]);
 
         // create payment methods
-        collect(WalletsEnum::all())->each(function ($pMethod) {
+        collect(WalletsEnum::all())->each(function ($pMethod) use ($faker) {
             PaymentMethod::create([
                 'label' => $pMethod['label'],
                 'name' => $pMethod['name'],
                 'symbol' => $pMethod['symbol'] ?? null,
-                'address' => $pMethod['symbol'] ? '0x' . $this->faker->sha256() : null,
+                'address' => $pMethod['symbol'] ? '0x' . $faker->sha256() : null,
                 'img' => $pMethod['img'],
                 'type' => $pMethod['type'],
                 'status' => $pMethod['symbol'] ? false : true,

@@ -26,9 +26,9 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'username' => $this->faker->userName(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'phone' => $this->faker->unique()->phoneNumber(),
+            'username' => fake()->userName(),
+            'email' => fake()->unique()->safeEmail(),
+            'phone' => fake()->unique()->phoneNumber(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -79,15 +79,15 @@ class UserFactory extends Factory
                     ],
                     [
                         'phone_number' => $user->phone,
-                        'first_name' => $this->faker->firstName(),
-                        'last_name' => $this->faker->lastName(),
-                        'birth_date' => $this->faker->date(),
-                        'gender' => $this->faker->randomElement(['male', 'female', 'other']),
-                        'address' => $this->faker->address(),
-                        'city' => $this->faker->city(),
-                        'state' => $this->faker->region(),
-                        'country' => 'France', // $this->faker->country(),
-                        'zip_code' => $this->faker->postcode(),
+                        'first_name' => fake()->firstName(),
+                        'last_name' => fake()->lastName(),
+                        'birth_date' => fake()->date(),
+                        'gender' => fake()->randomElement(['male', 'female', 'other']),
+                        'address' => fake()->address(),
+                        'city' => fake()->city(),
+                        'state' => fake()->region(),
+                        'country' => 'France', // fake()->country(),
+                        'zip_code' => fake()->postcode(),
                     ]
                 );
             }
