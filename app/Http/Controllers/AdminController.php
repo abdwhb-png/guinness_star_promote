@@ -42,7 +42,7 @@ class AdminController extends BaseController
             ->get()
             ->map(function ($item) {
                 return array_merge($item->toArray(), [
-                    'username' => $item->user ? $item->user->username : 'unknown',
+                    'username' => $item->user ? $item->user->call_name : 'unknown',
                     'text' => 'has logged in with ip ' . $item->ip_address,
                     'date' => $item->created_at ? $item->created_at->diffForHumans() : 'unknown_date',
                 ]);
