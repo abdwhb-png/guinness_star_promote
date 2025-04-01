@@ -68,17 +68,7 @@ class UsersController extends BaseController
      */
     public function index()
     {
-        $query = User::where('id', '!=', Auth::id());
-
-        if (!Auth::user()->hasRole(RolesEnum::ROOT->value)) {
-            $query->withoutRole(RolesEnum::ROOT->value);
-        }
-
-        if (!Auth::user()->isSuperAdmin()) {
-            $query->withoutRole(RolesEnum::SUPERADMIN->value)
-                ->withoutRole(RolesEnum::ADMIN->value)
-                ->withoutRole(RolesEnum::ROOT->value);
-        }
+        $query = User::where('id', '!=', Auth::id())->role(RolesEnum::USER->value);
 
         return Inertia::render(page_dir() . 'Users', [
             'filters' => FacadesRequest::all('search', 'sort'),
