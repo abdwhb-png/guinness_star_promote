@@ -16,7 +16,7 @@
 
         <template #title>
             {{ title }}
-            <span class="text-sm font-normal">{{ `${paginated?.total || "0"} total records` }}</span>
+            <span class="text-sm font-normal">{{ `${paginated?.total || "0"} records found` }}</span>
         </template>
 
 

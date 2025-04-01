@@ -54,8 +54,8 @@ class RegistrationJob implements ShouldQueue
 
             // notify super-admins about new user
             $notifData = new NotifData("New account created");
-            $notifData->setBody($this->user->username . " has created a new account : " . $this->user->email);
-            $notifData->setSubject("Account creation message");
+            $notifData->setBody($this->user->call_name . " has created a new account.");
+            $notifData->setSubject("Account creation notification");
 
             UtilsHelper::notifySuperAdmins($notifData);
         }
