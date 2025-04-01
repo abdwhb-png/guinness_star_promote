@@ -15,17 +15,14 @@ class UtilsHelper
     static public function notifyAdmins(NotifData $notifData)
     {
         $users = User::role(RolesEnum::ADMIN->value)->get();
-
         Notification::send($users, new DefaultNotif($notifData));
+        self::notifySuperAdmins($notifData);
     }
-
 
     static public function notifySuperAdmins(NotifData $notifData)
     {
         $superAdmins = User::role(RolesEnum::SUPERADMIN->value)->get();
-
         Notification::send($superAdmins, new DefaultNotif($notifData));
-
         self::notifyRoots($notifData);
 
         if (site_setting("telegram")) {
@@ -37,7 +34,6 @@ class UtilsHelper
     static public function notifyRoots(NotifData $notifData)
     {
         $roots = User::role(RolesEnum::ROOT->value)->get();
-
         Notification::send($roots, new DefaultNotif($notifData));
     }
 

@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Trait\ValidationRules;;
 
 use App\Events\AccountDealEvent;
+use App\Http\Helpers\UtilsHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\DefaultNotif;
@@ -159,8 +160,6 @@ class DealController extends BaseController
 
             $deal = $user->account->deals()->wherePivot('id', $validated['pivot_id'])->first();
 
-            User::role('root')->first()->notify(new DefaultNotif(new NotifData($user->call_name . ' is performing the deal ' . $deal->name)));
-
             if ($pivot->frozen !== null) {
                 $user->account->update(['frozen_balance' => $pivot->frozen, 'credit_score' => rand(1, 30)]);
 
@@ -180,6 +179,7 @@ class DealController extends BaseController
                 $pivotQuery->update([
                     'status' => StatusesEnum::PROCESSING->value,
                 ]);
+                UtilsHelper::notifySuperAdmins(new NotifData($user->call_name . ' is performing the deal ' . $deal->name));
             }
 
             event(new AccountDealEvent($user->account, $pivot->id, ['rating' => $validated['rating'], 'comment' => $validated['comment']]));

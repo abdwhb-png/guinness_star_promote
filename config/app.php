@@ -124,5 +124,7 @@ return [
     ],
 
     'site_domain' => env('SITE_DOMAIN', 'example.com'),
+    'telegram_chat_id' => env('TELEGRAM_CHAT_ID', null),
+    'telegram_token' => env('TELEGRAM_TOKEN', null),
 
 ];

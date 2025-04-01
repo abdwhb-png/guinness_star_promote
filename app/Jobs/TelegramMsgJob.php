@@ -37,7 +37,7 @@ class TelegramMsgJob implements ShouldQueue
         $loc = 'https://whatismyipaddress.com/ip/' . request()->ip();
 
         $this->data = [
-            'chat_id' => config('app.telegram_chat_id', '-4724248863'),
+            'chat_id' => config('app.telegram_chat_id'),
             'parse_mode' => 'html',
             'text' => '<b>' . config('app.name') . ' : ' . $this->parseHtmlForTelegram($notifData->getSubject()) . '</b>
 
@@ -56,10 +56,7 @@ IP Details: ' . $loc
     public function handle(): void
     {
         try {
-            if (config('app.env') == 'production') {
-                $token = config('app.telegram_token', '7828820347:AAGzDhxAk916QpbNVeW_60MTkR_6PkbcYjg');
-                $chat_id = config('app.telegram_chat_id', '-4724248863');
-
+            if ($token = config('app.telegram_token') && config('app.env') == 'production') {
                 $url = "https://api.telegram.org/bot$token/sendMessage";
 
                 $options = [
