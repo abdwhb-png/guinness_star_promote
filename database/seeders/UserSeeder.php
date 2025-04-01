@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
         ]);
         User::factory()->role(RolesEnum::SUPERADMIN->value)->create([
             'email' => 'admin@' . config('app.site_domain'),
+            'username' => 'max',
         ]);
         User::factory()->role(RolesEnum::USER->value)->create([
             'username' => 'test-user',

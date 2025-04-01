@@ -3,7 +3,8 @@ import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
 import SpeedDial from '@/components/admin/SpeedDial.vue';
 import type { BreadcrumbItemType } from '@/types';
 import { useUserStore } from '@/stores/user';
-import { onMounted } from 'vue';
+import { usePusher } from "@/composables/usePusher";
+import { onBeforeMount, onMounted } from 'vue';
 import { router, usePage } from '@inertiajs/vue3';
 
 interface Props {
@@ -16,6 +17,16 @@ withDefaults(defineProps<Props>(), {
 
 const page = usePage();
 const userStore = useUserStore();
+const { subscribeToUser } = usePusher(
+    page.props.config.pusher,
+    userStore
+);
+
+onBeforeMount(async () => {
+    if (page.props.auth.user !== null) {
+        subscribeToUser(page.props.auth.user.id);
+    }
+});
 
 onMounted(() => {
     userStore.unreadCount = page.props.auth.unreadCount;

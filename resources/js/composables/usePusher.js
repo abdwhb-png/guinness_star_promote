@@ -41,8 +41,8 @@ export function usePusher(config, userStore) {
                 } else {
                     toast.add({
                         severity: "info",
-                        summary: payload.title,
-                        // detail: payload.body,
+                        summary: "Vous avez une nouvelle notification",
+                        detail: payload.title,
                         life: 3000,
                     });
                 }

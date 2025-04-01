@@ -70,7 +70,7 @@ class HandleAccountDeal implements ShouldQueue
         $notifData = new NotifData('Deal completion commission received.');
         $notifData->setBody(
             'You have received ' . $transaction->textAmount() .
-                ' commission for completing the deal: ' . $event->deal->name
+                ' commission for completing the task for: ' . $event->deal->name
         );
 
         $event->account->user->notify(new DefaultNotif($notifData));

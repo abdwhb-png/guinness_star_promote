@@ -36,18 +36,12 @@
                                 {{ item.date }}
                                 <span class="hidden">{{
                                     item.created_at
-                                }}</span>
+                                    }}</span>
                             </p>
                         </div>
 
-                        <Button v-if="page.props.auth.user.isRoot" @click="
-                            adminStore.deleteData(
-                                'co_logs',
-                                item.id,
-                                confirm,
-                                toast
-                            )
-                            " outlined icon="pi pi-times" severity="danger" rounded size="small" aria-label="Delete" />
+                        <Button v-if="page.props.auth.user.isRoot" @click="() => onDelete(item.id)" outlined
+                            icon="pi pi-times" severity="danger" rounded size="small" aria-label="Delete" />
                     </div>
                 </div>
             </div>
@@ -73,17 +67,14 @@ const props = defineProps({
     searchText: { type: String, default: "" },
 });
 
+const page = usePage();
 const adminStore = useAdminStore();
 const confirm = useConfirm();
 const toast = useToast();
 
-const search = ref(props.searchText || null);
-
 const items = ref(props.datas);
-
-const page = usePage();
 const currentPage = ref(1);
-
+const search = ref(props.searchText || null);
 const loading = ref(false);
 const disableLoadMore = ref(false);
 
@@ -92,9 +83,32 @@ const searchData = async () => {
     loadMore();
 };
 
-const loadMore = () => {
-    loading.value = true;
+const onDelete = async (id) => {
+    await adminStore.deleteData(
+        'co_logs',
+        id,
+        confirm,
+        toast
+    )
+    // loadMore();
+}
 
+watch(
+    () => (props.searchText, search.value),
+    (text, input) => {
+        if (text) {
+            search.value = text;
+            loadMore();
+        }
+        if (input !== null) {
+            searchData();
+        }
+    },
+    { immediate: true }
+);
+
+function loadMore() {
+    loading.value = true;
     currentPage.value++;
 
     axios
@@ -114,28 +128,4 @@ const loadMore = () => {
             loading.value = false;
         });
 };
-
-watch(
-    () => (adminStore.deletion, search.value),
-    (deleted, input) => {
-        if (deleted === true) {
-            loadMore();
-        }
-
-        if (input !== null) {
-            searchData();
-        }
-    }
-);
-
-watch(
-    () => props.searchText,
-    (text) => {
-        if (text) {
-            search.value = text;
-            loadMore();
-        }
-    },
-    { immediate: true }
-);
 </script>

@@ -22,7 +22,6 @@ const props = defineProps({
 
 const page = usePage();
 const userStore = useUserStore();
-
 const { subscribeToUser, subscribeToUserAccount } = usePusher(
     page.props.config.pusher,
     userStore

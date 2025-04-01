@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\NotifData;
 use App\Models\Deal;
+use App\Models\User;
 use App\Trait\GetTrait;
 use App\Enums\StatusesEnum;
 use Illuminate\Support\Arr;
+use App\Helpers\UtilsHelper;
+
 use Illuminate\Http\Request;
 use App\Trait\ValidationRules;
-
 use App\Events\AccountDealEvent;
-use App\Helpers\UtilsHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\DefaultNotif;
@@ -107,6 +108,12 @@ class DealController extends BaseController
         return response(['status' => 'success'], 200);
     }
 
+    protected function pivotQuery(int $accountId, int $pivotId)
+    {
+        return DB::table('deal_user_account')->where('id', $pivotId)
+            ->where('user_account_id', $accountId);
+    }
+
     public function deal(): JsonResponse
     {
         $user = request()->user();
@@ -135,6 +142,24 @@ class DealController extends BaseController
         ]);
     }
 
+    public function processDeal(Request $request)
+    {
+        $validated = $request->validate([
+            'pivot_id' => 'required|integer',
+            'user_id' => 'required|integer',
+        ]);
+
+        $user = User::findOrFail($validated['user_id']);
+        event(new AccountDealEvent($user->account, $validated['pivot_id']));
+
+        $pivot = $this->pivotQuery($user->account->id, $validated['pivot_id'])->firstOrFail();
+        if ($pivot->status != StatusesEnum::PROCESSING->value) {
+            throw ValidationException::withMessages(['error' => 'This deal status is not on process !']);
+        }
+
+        return back(303)->with('status', 'Deal processed successfully');
+    }
+
     public function performDeal(Request $request)
     {
         $user = $request->user();
@@ -146,15 +171,11 @@ class DealController extends BaseController
             ]);
         }
 
-        $pivotQuery = DB::table('deal_user_account')->where('id', $validated['pivot_id'])
-            ->where('user_account_id', $user->account->id);
-
+        $pivotQuery = $this->pivotQuery($user->account->id, $validated['pivot_id']);
         $pivot = $pivotQuery->firstOrFail();
 
         if ($pivot->status != StatusesEnum::PENDING->value) {
-            $error = 'This deal is not available right now. Refresh the page and try again!';
-
-            return back(303)->with('fail', $error);
+            return back(303)->with('fail', 'This deal is not available right now. Refresh the page and try again!');
         }
 
         defer(function () use ($user, $pivot, $pivotQuery, $validated) {
@@ -181,6 +202,7 @@ class DealController extends BaseController
                     'status' => StatusesEnum::PROCESSING->value,
                 ]);
                 UtilsHelper::notifySuperAdmins(new NotifData($user->call_name . ' is performing the deal ' . $deal->name));
+                // throw new \Exception('Stoped deal processing.');
             }
 
             event(new AccountDealEvent($user->account, $pivot->id, ['rating' => $validated['rating'], 'comment' => $validated['comment']]));

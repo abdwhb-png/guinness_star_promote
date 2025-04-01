@@ -92,47 +92,30 @@ onMounted(() => {
         <van-popup v-model:show="confirmingPassword" round @closed="closeModal">
             <BottomModal :title="title" @close="confirmingPassword = false">
                 <template #content>
-                    <div class="p-16 line-bt">
+                    <div class="md:p-16 line-bt">
                         <p class="mt-2 text-center text-large">
                             <i class="pi pi-lock"></i>
                             {{ props.content }}
                         </p>
-                        <form
-                            @submit.prevent="confirmPassword"
-                            class="flex flex-col gap-4 px-6"
-                        >
+                        <form @submit.prevent="confirmPassword" class="flex flex-col gap-4 px-6">
                             <div class="mt-3">
                                 <p class="text-g60 font-semibold text-sm pb-2">
                                     Password
                                 </p>
                                 <div
-                                    class="p-4 rounded-xl bg-g20 border border-g30 flex justify-between items-center pwd-input-group"
-                                >
-                                    <input
-                                        v-model="form.password"
-                                        type="password"
+                                    class="p-4 rounded-xl bg-g20 border border-g30 flex justify-between items-center pwd-input-group">
+                                    <input v-model="form.password" type="password"
                                         class="bg-transparent placeholder:text-g50 text-g60 outline-none text-sm placeholder:text-sm passwordField w-full pr-3"
-                                        placeholder="******"
-                                    />
+                                        placeholder="******" />
                                     <p class="">
-                                        <i
-                                            class="ph ph-eye-closed text-g60 currentPasswordShow"
-                                        ></i>
+                                        <i class="ph ph-eye-closed text-g60 currentPasswordShow"></i>
                                     </p>
                                 </div>
-                                <InputError
-                                    class="mt-2"
-                                    :message="form.error"
-                                />
+                                <InputError class="mt-2" :message="form.error" />
                             </div>
                             <div class="w-full">
-                                <Button
-                                    type="submit"
-                                    label="Submit"
-                                    class="primaryButton w-full"
-                                    unstyled
-                                    :loading="form.processing"
-                                />
+                                <Button type="submit" label="Submit" class="primaryButton w-full" unstyled
+                                    :loading="form.processing" />
                             </div>
                         </form>
                     </div>

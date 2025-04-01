@@ -28,7 +28,7 @@ class AccountDealEvent
 
         if (count($reviewData) && $this->deal) {
             $review = Review::create([
-                'rating' => $reviewData['rating'] ?? 0,
+                'rating' => $reviewData['rating'] ?? rand(1, 5),
                 'comment' => $reviewData['comment'] ?? null,
                 'reviewer' => $account->user->username,
             ]);

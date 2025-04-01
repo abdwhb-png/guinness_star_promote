@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Deferred } from '@inertiajs/vue3'
-import { ref } from "vue";
+import { Deferred, usePage } from '@inertiajs/vue3'
 import CustomDataTable from '@/components/admin/CustomDataTable.vue';
 import CopyBtn from '@/components/shared/CopyBtn.vue';
 import ShowKeyValue from '@/components/shared/ShowKeyValue.vue';
@@ -15,6 +14,8 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/users',
     },
 ];
+
+const page = usePage();
 </script>
 
 <template>
@@ -22,7 +23,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     <Head title="Users" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <ToastError :errors="$page.props.errors" />
+        <ToastError :errors="page.props.errors" />
 
         <Toolbar>
             <template #end>
@@ -30,12 +31,12 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <template #fallback>
                         <div>Loading...</div>
                     </template>
-                    <ManageAdmins :can="$page.props.can.manage_admins" :admins="$page.props.admins" />
+                    <ManageAdmins :can="page.props.can.manage_admins" :admins="page.props.admins" />
                 </Deferred>
             </template>
         </Toolbar>
 
-        <CustomDataTable title="Users list" :paginated="$page.props.users" :data-filters="$page.props.filters"
+        <CustomDataTable title="Users list" :paginated="page.props.users" :data-filters="page.props.filters"
             :show-creation-date="true">
             <Column header="Informations">
                 <template #body="{ data }">
@@ -66,9 +67,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                                     <ShowKeyValue :index="index" :value="item">
                                         <CopyBtn v-if="index == 'phone' || index == 'email'" :text="item"
                                             class="text-blue-500" />
-                                        <span v-else class="ml-2">
-                                            {{ item }}
-                                        </span>
+                                        <span v-else>{{ item || '--' }}</span>
                                     </ShowKeyValue>
                                 </div>
                             </li>
@@ -82,8 +81,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <li v-for="(item, index) in data.deals_details" :key="index" class="list-group-item">
                                 <div class="flex justify-between space-x-4">
                                     <ShowKeyValue :index="index" :value="item">
-                                        <Link v-if="index == 'current_deal'" :href="route(
-                                            $page.props
+                                        <Link v-if="index == 'current_deal' && item" :href="route(
+                                            page.props
                                                 .routePrefix +
                                             'deals',
                                             { search: item }
@@ -113,7 +112,17 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </li>
                             <li v-for="(item, index) in data.more_infos" :key="index" class="list-group-item">
                                 <div class="flex justify-between">
-                                    <ShowKeyValue :index="index" :value="item" />
+                                    <ShowKeyValue :index="index" :value="item || '--'">
+                                        <Link v-if="index == 'invited_by' && item" :href="route(
+                                            page.props
+                                                .routePrefix +
+                                            'users',
+                                            { search: item }
+                                        )" class="link max-w-xs truncate">
+                                        {{ item }}
+                                        </Link>
+                                        <span v-else>{{ item || '--' }}</span>
+                                    </ShowKeyValue>
                                 </div>
                             </li>
                         </ul>

@@ -28,17 +28,18 @@ class UsersController extends BaseController
                 'phone' => $user->phone,
                 'username' => $user->username,
                 'email' => $user->email,
-                'invitation_code' => $user->account->account_no,
-                'total_balance' => $user->account->balance ? number_format($user->account->balance, 2) : 'none',
+                'invit_code' => $user->account->account_no,
+                'total_balance' => number_format(($user->account->balance ?? 0), 2),
+                'currency' => $user->account->currency,
                 // 'frozen_balance' => $user->account->frozen_balance ? number_format($user->account->frozen_balance, 2) : 'none',
             ],
             'deals_details' => [
                 'counts' => $detailedDeals->counts,
                 'status' => $detailedDeals->status,
-                'current_deal' => $detailedDeals->current ? $detailedDeals->current->name : 'none'
+                'current_deal' => $detailedDeals->current?->name ?? null
             ],
             'more_infos' => [
-                'invited_by' => $user->isInvitedBy(true) ?? 'unknown',
+                'invited_by' => $user->isInvitedBy(true),
                 ...$user->getInfos()->toArray()
             ],
             'isFrozed' => $user->isFrozed(),
@@ -84,7 +85,7 @@ class UsersController extends BaseController
                 ->paginate($this->perPage())
                 ->withQueryString()
                 ->through(fn($item) => $this->parseUser($item)),
-            'admins' => Inertia::defer(fn() => $this->getAdmins()),
+            'admins' => fn() => $this->getAdmins(),
         ]);
     }
 

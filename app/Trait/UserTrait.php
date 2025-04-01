@@ -171,10 +171,10 @@ trait UserTrait
     public function getInfos()
     {
         return collect([
-            'contact' => $this->info->phone_number ?? 'N/A',
-            'first_name' => $this->info->first_name ?? 'N/A',
-            'last_name' => $this->info->last_name ?? 'N/A',
-            'gender' => $this->info->gender ?? 'N/A',
+            'contact' => $this->info->phone_number,
+            'first_name' => $this->info->first_name,
+            'last_name' => $this->info->last_name,
+            'gender' => $this->info->gender,
         ]);
     }
 

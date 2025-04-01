@@ -68,9 +68,9 @@ onMounted(async () => {
             <!-- deal images -->
             <div class="pt-8 px-4">
                 <div class="flex flex-col items-center gap-2">
-                    <span class="text-xl font-medium">Scroll Down</span>
+                    <span class="text-xl font-medium">Click on continue</span>
                     <span
-                        class="slidedown-icon h-8 w-8 bg-primary text-white rounded-full inline-flex items-center justify-center">
+                        class="slidedown-icon h-8 w-8 bg-black text-white rounded-full inline-flex items-center justify-center">
                         <i class="pi pi-arrow-down" />
                     </span>
                 </div>
@@ -105,7 +105,7 @@ onMounted(async () => {
                                     <p class="text-g60 font-semibold text-xs">
                                         {{ deal.average_rating }}
                                         <span class="font-normal text-g40">({{ deal.total_reviews + ' reviews'
-                                            }})</span>
+                                        }})</span>
                                     </p>
                                 </div>
                             </div>
@@ -134,8 +134,23 @@ onMounted(async () => {
                     <p class="text-slate-500">
                         Click on continue to start rating.
                     </p>
-                    <div v-show="deal.description" class="text-sm text-g50 pt-4">
+                    <div v-show="deal.description" class="text-sm text-g50 py-4">
                         <div v-html="deal.description"></div>
+                    </div>
+                    <div class="text-g50 flex flex-col mx-3">
+                        <p class="flex justify-between">
+                            <span>Popularity</span> <span>{{ "%" + deal.popularity }}</span>
+                        </p>
+                        <p class="flex justify-between">
+                            <span>Tags</span>
+                            <span class="max-w-56 truncate" v-tooltip.bottom="deal.tags">
+                                {{ deal.tags }}</span>
+                        </p>
+                        <p class="flex justify-between">
+                            <span>Metadata</span>
+                            <span class="max-w-56 truncate" v-tooltip.bottom="deal.metadata">
+                                {{ deal.metadata }}</span>
+                        </p>
                     </div>
                 </div>
                 <!-- end deal description -->

@@ -62,6 +62,6 @@ class Transaction extends Model implements WithRefID
 
     public function textAmount(): string
     {
-        return '$ ' . $this->amount . ' ' . $this->account->currency;
+        return $this->account->currency . ' ' . $this->amount;
     }
 }

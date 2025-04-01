@@ -5,15 +5,12 @@ namespace App\Listeners;
 use App\Enums\StatusesEnum;
 use App\Enums\TransacEnum;
 use App\NotifData;
-use App\Models\User;
-use App\Models\Balance;
 use App\Models\Transaction;
 use App\Models\UserAccount;
 use App\Events\TransactionEvent;
 use App\Events\UserAccountEvent;
-use App\Http\Helpers\UtilsHelper;
+use App\Helpers\UtilsHelper;
 use App\Notifications\DefaultNotif;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

@@ -1,5 +1,5 @@
 <script setup>
-import { router, usePage } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 import { ref, reactive, watch } from "vue";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
@@ -7,8 +7,8 @@ import { useAdminStore } from "@/stores/admin";
 import { useActionButtons } from "@/composables/useActionButtons";
 import { capitalizeFirstLetter } from "@/utils/helpers";
 
-import Show from "@/components/admin/Users/Show.vue";
-import Edit from "@/components/admin/Users/Edit.vue";
+import ShowUser from "@/components/admin/Users/ShowUser.vue";
+import EditUser from "@/components/admin/Users/EditUser.vue";
 import CoLogs from "@/components/admin/Dashboard/CoLogs.vue";
 import DealsList from "@/components/admin/Users/Deals/List.vue";
 import ConfirmsPassword from "@/components/admin/ConfirmsPassword.vue";
@@ -105,10 +105,10 @@ function confirmAction(id, type) {
         </template>
 
         <!-- show user -->
-        <Show v-if="userDialog.type == 'show'" />
+        <ShowUser v-if="userDialog.type == 'show'" />
 
         <!-- edit user -->
-        <Edit v-if="userDialog.type == 'edit'" />
+        <EditUser v-if="userDialog.type == 'edit'" />
 
         <!-- user deals -->
         <DealsList v-if="userDialog.type == 'deals'" />
@@ -119,34 +119,33 @@ function confirmAction(id, type) {
 
     <!-- actions -->
     <div class="flex flex-wrap gap-3">
-        <Button label="Show" :size="buttonSize" outlined severity="contrast" icon="pi pi-eye"
+        <Button label="Show" :size="buttonSize" outlined raised severity="secondary" icon="pi pi-eye"
             @click="selectUser('show', props.data)" />
 
-        <Button label="Edit" :size="buttonSize" severity="info" icon="pi pi-pencil" :disabled="!CAN"
+        <Button label="Edit" :size="buttonSize" severity="primary" icon="pi pi-pencil" :disabled="!CAN"
             @click="selectUser('edit', props.data)" />
 
-        <Button label="Deals" icon="pi pi-th-large" severity="primary" outlined :size="buttonSize" :disabled="!CAN"
-            @click="selectUser('deals', data)" />
+        <Button label="Deals" icon="pi pi-th-large" severity="primary" outlined raised :size="buttonSize"
+            :disabled="!CAN" @click="selectUser('deals', data)" />
 
         <ConfirmsPassword @confirmed="confirmAction(data.id, 'GrantDeals')">
-            <Button type="button" :loading="loading" label="Grant/Reset Deals" icon="pi pi-th-large" severity="primary"
+            <Button type="button" :loading="loading" label="Grant/Reset Deals" icon="pi pi-th-large" severity="info"
                 :size="buttonSize" :disabled="!CAN" @click="" />
         </ConfirmsPassword>
+
+        <Button v-if="data.isFrozed" type="button" :loading="loading" label="Defroze" severity="success" outlined raised
+            icon="pi pi-check" :size="buttonSize" :disabled="!CAN" @click="confirmAction(data.id, 'Defroze')" />
 
         <Button as="a" label="Transacs." :href="route($page.props.routePrefix + 'transactions', {
             search: data.call_name,
         })
             " severity="secondary" icon="pi pi-arrow-right-arrow-left" :size="buttonSize" />
 
-        <Button @click="selectUser('coLogs', data)" label="Co. Logs" outlined severity="secondary" icon="pi pi-sign-in"
+        <Button @click="selectUser('coLogs', data)" label="Co. Logs" outlined severity="contrast" icon="pi pi-sign-in"
             :size="buttonSize" />
 
-        <Button v-if="data.isFrozed" type="button" :loading="loading" label="Defroze" severity="success"
-            variant="outlined" icon="pi pi-check" :size="buttonSize" :disabled="!CAN"
-            @click="confirmAction(data.id, 'Defroze')" />
-
         <ConfirmsPassword @confirmed="confirmAction(data.id, 'Delete')">
-            <Button type="button" :loading="loading" label="Delete" icon="pi pi-trash" :disabled="!CAN"
+            <Button type="button" :loading="loading" label="Delete" outlined icon="pi pi-trash" :disabled="!CAN"
                 severity="danger" :size="buttonSize" />
         </ConfirmsPassword>
     </div>

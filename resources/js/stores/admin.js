@@ -8,7 +8,6 @@ import {
     showToast,
 } from "vant";
 import axios from "axios";
-import { reject } from "lodash";
 
 const page = usePage();
 
@@ -270,7 +269,6 @@ export const useAdminStore = defineStore("adminStore", {
                             summary: "Data deletion results",
                             life: 3000,
                         });
-
                         router.reload();
                     } else {
                         showToast({
@@ -278,10 +276,8 @@ export const useAdminStore = defineStore("adminStore", {
                             type: result.ok ? "success" : "danger",
                         });
                     }
-
                     this.deletion = result.ok;
                 },
-
                 reject: () => {
                     this.deletion = null;
                 },

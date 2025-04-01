@@ -5,9 +5,9 @@ import { useSiteStore } from "@/stores/site";
 import { copyToClipboard } from "@/utils";
 import { showSuccessToast, showFailToast, showNotify } from "vant";
 
-import AskForPassword from "@/Components/User/AskForPassword.vue";
-import RightModal from "@/Components/User/RightModal.vue";
-import PaymentMethods from "@/Components/User/PaymentMethods.vue";
+import AskForPassword from "@/components/user/AskForPassword.vue";
+import RightModal from "@/components/user/RightModal.vue";
+import PaymentMethods from "@/components/user/PaymentMethods.vue";
 
 const siteStore = useSiteStore();
 
@@ -19,7 +19,7 @@ const pMethodSection = ref("choose");
 const form = useForm({
     type: "",
     method: null,
-    amount: "",
+    amount: null,
 });
 
 const success = ref(null);
@@ -41,12 +41,13 @@ const start = (type) => {
 };
 
 const handleSelectedPMethod = (item) => {
-    form.method = item.method.symbol || siteStore.defaultCoin;
+    form.method = item.type == 'crpto' ? item.method.symbol : item.method.name;
     selectedPMethod.value = item;
     showPMethod.value = false;
 };
 
 const onClosePopup = () => {
+    showKeyboard.value = false;
     form.defaults("amount");
     form.clearErrors();
     success.value = null;
@@ -87,56 +88,40 @@ const submit = () => {
 
 <template>
     <div class="flex justify-between items-center gap-2 w-full">
-        <button
-            @click="start('recharge')"
-            class="primaryButton w-full !text-sm"
-        >
-            <i class="ph ph-hand-withdraw"></i> Recharge
+        <button @click="start('recharge')" class="primaryButton w-full !text-sm">
+            <i class="ph ph-hand-withdraw me-0.5"></i> Recharge
         </button>
-        <AskForPassword
-            class="w-full"
-            pwd-type="withdrawal"
-            title="Withdrawal Password"
+        <AskForPassword class="w-full" pwd-type="withdrawal" title="Withdrawal Password"
             content="For your security, please enter your withdrawal password to continue."
-            @confirmed="start('withdrawal')"
-        >
+            @confirmed="start('withdrawal')">
             <button class="primaryButtonOutline w-full !text-sm mt-4">
-                <i class="ph ph-hand-deposit"></i> Withdraw
+                <i class="ph ph-hand-deposit me-0.5"></i> Withdraw
             </button>
         </AskForPassword>
     </div>
 
-    <van-popup v-model:show="showPopup" round @closed="onClosePopup">
+    <van-number-keyboard z-index="9999" :show="showKeyboard" v-model="form.amount" theme="custom"
+        :extra-key="['00', '.']" close-button-text="Close" @blur="showKeyboard = false" />
+
+    <van-popup v-model:show="showPopup" round @closed="onClosePopup" teleport="body">
         <BottomModal :title="`New ${form.type}`" @close="showPopup = false">
             <template #content>
                 <div v-if="success" class="">
-                    <van-notice-bar
-                        color="#1989fa"
-                        background="#ecf9ff"
-                        left-icon="info-o"
-                        :text="success"
-                    />
+                    <van-notice-bar color="#1989fa" background="#ecf9ff" left-icon="info-o" :text="success" />
 
                     <div v-if="form.type === 'recharge'">
                         <p>
                             Please send the recharge money to the following
                             address.
                         </p>
-                        <p
-                            class="flex justify-start items-center gap-1 text-g50 text-xs pt-3"
-                            style="overflow-x: auto"
-                        >
-                            <i class="ph ph-wallet"></i
-                            >{{ selectedPMethod?.method?.address }}
+                        <p class="flex justify-start items-center gap-1 text-g50 text-xs pt-3" style="overflow-x: auto">
+                            <i class="ph ph-wallet"></i>{{ selectedPMethod?.method?.address }}
                         </p>
-                        <button
-                            @click="
-                                copyToClipboard(
-                                    selectedPMethod?.method?.address
-                                )
-                            "
-                            class="text-xs text-g50 py-0.5 px-1 bg-g20 border border-g30 rounded-md mt-2"
-                        >
+                        <button @click="
+                            copyToClipboard(
+                                selectedPMethod?.method?.address
+                            )
+                            " class="text-xs text-g50 py-0.5 px-1 bg-g20 border border-g30 rounded-md mt-2">
                             Copy Address
                         </button>
                     </div>
@@ -147,11 +132,8 @@ const submit = () => {
                         <p class="text-g60 font-semibold text-sm pb-2">
                             Method
                         </p>
-                        <a
-                            href="javascript:void(0);"
-                            @click="showPMethod = true"
-                            class="flex justify-between items-center p-4 rounded-md bg-g20 border border-g30"
-                        >
+                        <a href="javascript:void(0);" @click="showPMethod = true"
+                            class="flex justify-between items-center p-4 rounded-md bg-g20 border border-g30">
                             <p class="text-sm text-g50">
                                 {{
                                     form.method ? form.method : "Select Method"
@@ -159,10 +141,7 @@ const submit = () => {
                             </p>
                             <i class="ph ph-caret-right"></i>
                         </a>
-                        <InputError
-                            class="mt-2"
-                            :message="form.errors.method"
-                        />
+                        <InputError class="mt-2" :message="form.errors.method" />
                     </div>
 
                     <div class="">
@@ -170,59 +149,28 @@ const submit = () => {
                             Amount
                         </p>
                         <div class="p-4 rounded-xl bg-g20 border border-g30">
-                            <input
-                                v-model="form.amount"
-                                type="text"
+                            <input v-model="form.amount" type="text"
                                 class="bg-transparent placeholder:text-g50 text-g60 outline-none text-sm placeholder:text-sm"
-                                placeholder="Please enter amount"
-                                readonly
-                                @click="showKeyboard = true"
-                            />
+                                placeholder="Please enter amount" />
                         </div>
-                        <InputError
-                            class="mt-2"
-                            :message="form.errors.amount"
-                        />
+                        <InputError class="mt-2" :message="form.errors.amount" />
+
                     </div>
                 </div>
                 <div class="flex justify-start items-center gap-3 mt-4">
-                    <Button
-                        @click="submit"
-                        :label="success ? 'Restart' : 'Confirm'"
-                        :loading="form.processing"
-                        unstyled
-                        class="w-full"
-                        :class="
-                            success ? 'primaryButtonOutline' : 'primaryButton'
-                        "
-                    />
+                    <Button @click="submit" :label="success ? 'Restart' : 'Confirm'" :loading="form.processing" unstyled
+                        class="w-full" :class="success ? 'primaryButtonOutline' : 'primaryButton'
+                            " />
                 </div>
             </template>
         </BottomModal>
     </van-popup>
 
-    <van-popup
-        v-model:show="showPMethod"
-        position="right"
-        :style="{ width: '100%', height: '100%' }"
-    >
+    <van-popup v-model:show="showPMethod" position="right" :style="{ width: '100%', height: '100%' }">
         <RightModal title="Select Payment Methods" @close="showPMethod = false">
             <template #content>
-                <PaymentMethods
-                    :section="pMethodSection"
-                    @selected="handleSelectedPMethod"
-                />
+                <PaymentMethods :section="pMethodSection" @selected="handleSelectedPMethod" />
             </template>
         </RightModal>
     </van-popup>
-
-    <van-number-keyboard
-        z-index="9999"
-        :show="showKeyboard"
-        v-model="form.amount"
-        theme="custom"
-        :extra-key="['00', '.']"
-        close-button-text="Close"
-        @blur="showKeyboard = false"
-    />
 </template>

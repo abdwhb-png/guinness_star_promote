@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Trait\GetTrait;
 use App\Enums\RolesEnum;
 use Illuminate\Http\Request;
 use App\Trait\ValidationRules;
-use App\Trait\GetTrait;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
@@ -130,7 +129,6 @@ class UserController extends BaseController
         return back(303)->with('status', 'Password updated successfully');
     }
 
-
     public function updatePaymentMethod(Request $request, $user = null)
     {
         $user = $user ?? $request->user();
@@ -146,12 +144,10 @@ class UserController extends BaseController
         return back(303)->with('status', 'Payment method updated successfully');
     }
 
-
     public function sessionsGet()
     {
         return BrowserSessions::sessions();
     }
-
 
     public function logoutOtherSessions(Request $request)
     {

@@ -6,22 +6,17 @@
 }
 </style>
 
-<script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { usePage } from "@inertiajs/vue3";
+<script setup>
+import { ref, computed, onMounted, watch } from "vue";
+import { usePage, router } from "@inertiajs/vue3";
 import { useToast } from "primevue/usetoast";
 import { useAdminStore } from "@/stores/admin";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { CustomToolbarButton, DataTableStatus } from "@/types";
 import { getSeverity, getFilters, parseStatuses, itemsPerPage } from "@/utils/dataTable";
 
-import Edit from "@/components/admin/Users/Deals/Edit.vue";
+import EditDeal from "@/components/admin/Users/Deals/Edit.vue";
 import CopyBtn from "@/components/shared/CopyBtn.vue";
 
-dayjs.extend(relativeTime);
-
-const props = defineProps({
+defineProps({
     showIdColumn: {
         type: Boolean,
         default: false,
@@ -37,15 +32,9 @@ const deals = ref([]);
 const loading = ref(false);
 const deal = ref(null);
 
-const statuses: Array<DataTableStatus> = parseStatuses(
-    (page.props.config as any).statuses.user_deal
-);
-
-const types = ref((page.props.config as any).dataTypes.deal);
-
-const globalFilterFields = (page.props.config as any).globalFilterFields
-    .user_deal;
-
+const statuses = parseStatuses(page.props.config.statuses.user_deal);
+const types = ref(page.props.config.dataTypes.deal);
+const globalFilterFields = page.props.config.globalFilterFields.user_deal;
 const filters = ref(getFilters(dataName));
 
 const initFilters = () => {
@@ -58,77 +47,84 @@ const indexes = computed(() =>
         value: i + 1,
     }))
 );
-const detailFilters = computed(() => [
-    {
-        label:
-            filters.value["state.negative_balance"].matchMode +
-            " without negative",
-        value: "none",
-    },
-]);
 
-const isCurrentClick = () => {
+const processNow = (data) => {
+    if (checkCurrentUser()) {
+        router.post(route(page.props.routePrefix + "process-deal"), {
+            user_id: adminStore.currentUser.id,
+            pivot_id: data.pivot_id
+        }, {
+            preserveScroll: true,
+            preserveState: true,
+            onStart: () => data.loading = true,
+            onSuccess: (page) => {
+                toast.add({
+                    severity: "success",
+                    summary: page.props.flash.status,
+                    life: 5000,
+                });
+                refetch();
+            },
+            onFinish: () => data.loading = false,
+        });
+    }
+};
+
+const setNegative = (data) => {
+    if (data.state.status !== "pending") {
+        alert("You can only set negative balance for pending deals");
+        return;
+    }
+    deal.value = data;
+};
+
+const refetch = async () => {
+    if (checkCurrentUser()) {
+        await adminStore.fetchCurrentUser(adminStore.currentUser.id, true);
+    }
+};
+
+watch(() => adminStore.currentUser, () => {
+    deals.value = adminStore.getUserDeals;
+}, { immediate: true, deep: true });
+
+function checkCurrentUser() {
+    if (!adminStore.currentUser) {
+        toast.add({
+            severity: "error",
+            detail: "User not found. Try again.",
+            life: 5000,
+        });
+        return false;
+    }
+    return true;
+}
+
+function searchCurrent() {
     deals.value?.filter((item) => {
         if (item.is_current) {
             filters.value["index"].value = item.index;
         }
     });
 };
-
-const setNegative = (data: any) => {
-    if (data.state.status !== "pending") {
-        toast.add({
-            severity: "error",
-            detail: "You can only set negative balance for pending deals",
-            life: 5000,
-        });
-        return;
-    }
-
-    deal.value = data;
-};
-
-const handleEditUpdated = (amount: number) => {
-    deals.value.forEach((item) => {
-        if (item.id === deal.value.id) {
-            item.state.negative_balance = amount == null ? "none" : amount;
-            item.pivot.frozen = amount * -1;
-            item.dates.updated = dayjs(new Date()).fromNow();
-        }
-    });
-};
-
-onMounted(() => {
-    deals.value = adminStore.getUserDeals;
-});
-
-const toolbarButtons: Array<CustomToolbarButton> = [
-    {
-        label: "Has Negative",
-        severity: "danger",
-        filterType: "neg_balance",
-        filterValue: "has",
-        countSearchKeys: ["state", "negative_balance"],
-    },
-];
 </script>
 
 <template>
     <!-- Contenu principal -->
     <div class="">
-        <Edit :item="deal" :id="deal?.id" @hide="deal = null" @updated="handleEditUpdated" />
+        <EditDeal :item="deal" @hide="deal = null" @updated="refetch" />
 
         <CustomToolbar :statuses :data="deals" :data-name="dataName" @filtered="filters = $event">
             <template #start>
-                <Button label="Show Current Deal" size="small" outlined filter-type="current" filter-value="is"
-                    @click="isCurrentClick" />
+                <Button label="Show Current Deal" size="small" severity="contrast" outlined filter-type="current"
+                    filter-value="is" @click="searchCurrent" />
             </template>
         </CustomToolbar>
 
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-            <DataTable :loading="loading" :value="deals" :limit="null" v-model:filters="filters" :globalFilterFields
-                filterDisplay="row" dataKey="id" :showClearFilterButton="true" :paginator="true"
-                paginatorPosition="both"
+            <DataTable :loading="loading" :value="deals" :limit="null" v-model:filters="filters"
+                :globalFilterFields="globalFilterFields" filterDisplay="row" dataKey="id" :showClearFilterButton="true"
+                :paginator="true" paginatorPosition="both"
                 paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
                 currentPageReportTemplate="{first} to {last} of {totalRecords}" :rowsPerPageOptions="itemsPerPage"
                 :rows="itemsPerPage[0]" @clear-filter="initFilters()">
@@ -189,6 +185,9 @@ const toolbarButtons: Array<CustomToolbarButton> = [
                             </template>
 
                             <template #end>
+                                <Button label="Process Now" size="small"
+                                    :disabled="data.status.toLowerCase() !== 'processing'" :loading="data.loading"
+                                    @click="processNow(data)" />
                                 <div v-if="page.props.dealHasNegative" class="flex flex-wrap gap-3">
                                     <Tag v-if="
                                         data.state.negative_balance !== 'none'

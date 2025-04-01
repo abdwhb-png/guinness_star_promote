@@ -3,11 +3,12 @@
 use App\Enums\RolesEnum;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DealController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\RolePermissionController;
-use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\DealsController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\RolePermissionController;
 
 Route::redirect('/', '/dashboard')->name('home');
 
@@ -23,6 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/users', [UsersController::class, 'index'])->name('users');
             Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions');
             Route::get('/deals', [DealsController::class, 'index'])->name('deals');
+            Route::post('/process-deal', [DealController::class, 'processDeal'])->name('process-deal');
         });
 
     Route::middleware('role:' . implode('|', Arr::except($roles, RolesEnum::ADMIN->value)))

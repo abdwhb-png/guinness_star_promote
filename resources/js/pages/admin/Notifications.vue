@@ -44,6 +44,10 @@ watch(() => props.notifications, () => {
         data: formattedNotifications
     };
 }, { immediate: true, deep: true });
+
+watch(() => userStore.unreadCount, () => {
+    router.visit('/notifications')
+});
 </script>
 
 <template>
