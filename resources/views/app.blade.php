@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
@@ -34,7 +34,7 @@
     <div class="gtranslate_wrapper"></div>
     <script>
         window.gtranslateSettings = {
-            "default_language": "{{ config('app.locale') }}",
+            "default_language": "en",
             "native_language_names": true,
             "languages": @json(config('vars.translatable_locales')),
             "wrapper_selector": ".gtranslate_wrapper",
