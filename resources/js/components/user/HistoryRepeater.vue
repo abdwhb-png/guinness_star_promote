@@ -78,7 +78,7 @@ watch(
                                 </div>
                                 <van-tag :type="getSeverity(item.status)">{{
                                     item.status
-                                }}</van-tag>
+                                    }}</van-tag>
                             </div>
 
                             <p class="text-g50 text-xs pt-1 mt-2">
@@ -117,7 +117,7 @@ watch(
                     </div>
                     <div class="">
                         <p class="text-xl font-medium text-g60">
-                            {{ item.name }} ({{ item.category }})
+                            <span translate="no">{{ item.name }}</span> ({{ item.category }})
                         </p>
 
                         <div class="flex justify-start items-center gap-2 pt-2 text-sm pb-2">

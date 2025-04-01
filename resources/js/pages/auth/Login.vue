@@ -48,7 +48,7 @@ onMounted(() => {
 
 <template>
     <UserLayout title="Log in" guest-title="Sign In"
-        guest-text="Fill your username and password to log in into your account.">
+        guest-text="Fill your phone number or username and password to log in into your account.">
         <form @submit.prevent="submit" class="pt-8 flex flex-col gap-4 px-6">
             <div class="">
                 <p class="text-g60 font-semibold text-sm pb-2">
@@ -57,7 +57,7 @@ onMounted(() => {
                 <div class="p-4 rounded-xl bg-g20 border border-g30">
                     <input v-model="form.username" type="text"
                         class="bg-transparent placeholder:text-g50 text-g60 outline-none text-sm placeholder:text-sm"
-                        placeholder="Enter username or email" autocomplete="username" />
+                        placeholder="Enter phone number or username" autocomplete="username" />
                 </div>
                 <InputError class="mt-2" :message="form.errors.username" />
             </div>

@@ -45,7 +45,9 @@ function changePage(index) {
 
             <template v-for="(item, index) in items">
                 <PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.value" as-child>
-                    <Button class="h-9 w-9 p-0" :variant="item.value === page ? 'default' : 'outline'" as-child>
+                    <Button class="h-9 w-9 p-0"
+                        :variant="item.value === page || item.value === route().params.page ? 'default' : 'outline'"
+                        as-child>
                         <Link preserve-scroll preserve-state prefetch cache-for="1m"
                             :href="route(route().current(), { ...route().params, page: item.value })">
                         {{ item.value }}

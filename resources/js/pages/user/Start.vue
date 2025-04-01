@@ -57,7 +57,7 @@ onMounted(async () => {
         <div v-if="!showLoader && !deal" class="loader-container">
             <Message severity="error" icon="pi pi-exclamation-circle">
                 <div v-html="errorMsg || 'Something went wrong. Please try again.'"></div>
-                <Link href="/more" class="link">Contact support</Link> or <button type="button"
+                <Link href="/more" class="link">Contact support</Link>&nbsp;or&nbsp;<button type="button"
                     class="underline text-black" onclick="reloadPage()">reload
                     page
                 </button>.
@@ -91,7 +91,7 @@ onMounted(async () => {
                 <div class="border-b border-dashed border-g30 pb-4">
                     <div class="flex justify-between items-center">
                         <div class="">
-                            <p class="text-xl font-bold text-g60">
+                            <p class="text-xl font-bold text-g60" translate="no">
                                 {{ deal.name }}
                             </p>
                             <div class="flex justify-between items-center mt-2">
@@ -105,7 +105,7 @@ onMounted(async () => {
                                     <p class="text-g60 font-semibold text-xs">
                                         {{ deal.average_rating }}
                                         <span class="font-normal text-g40">({{ deal.total_reviews + ' reviews'
-                                        }})</span>
+                                            }})</span>
                                     </p>
                                 </div>
                             </div>

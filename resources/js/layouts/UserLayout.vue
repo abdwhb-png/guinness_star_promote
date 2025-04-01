@@ -74,7 +74,7 @@ onMounted(() => {
                     <div class="flex justify-center items-center">
                         <ApplicationLogo style="max-width: 30px; max-height: 30px"
                             class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                        <h1 class="heading-1 font-semibold text-g60">
+                        <h1 class="heading-1 font-semibold text-g60" translate="no">
                             {{ page.props.name }}
                         </h1>
                     </div>
@@ -98,7 +98,7 @@ onMounted(() => {
                 <div class="flex h-8 w-8 items-center justify-center">
                     <AppLogoIcon class="size-8 fill-current text-black dark:text-white" />
                 </div>
-                <span class="text-2xl">{{ page.props.name }}</span>
+                <span class="text-2xl" translate="no">{{ page.props.name }}</span>
             </a>
             <TopSection :title="props.title || page.props.name" />
 

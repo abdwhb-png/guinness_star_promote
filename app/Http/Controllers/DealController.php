@@ -113,9 +113,10 @@ class DealController extends BaseController
     public function deal(): JsonResponse
     {
         $detailledDeals = request()->user()->detailedDeals();
+        $deposit = request()->user()->account->deposit;
         $error = null;
 
-        if (!request()->user()->account->deposit) {
+        if (!$deposit || $deposit <= 0) {
             $error = 'Your account balance is not enough to start. Please recharge your account.';
         } else if (!$detailledDeals->counts['pending']) {
             $error = 'You have completed all the available deals ! <br> Come back tomorrow form more.';

@@ -36,7 +36,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <UserLayout title="Register" guestTitle="Create Account" guestText="Signing up is easy. It only takes a few steps.">
+    <UserLayout title="Register" guestTitle="Create Account"
+        guestText="Signing up is easy. It only takes a few seconds.">
         <form @submit.prevent="submit" class="pt-8 flex flex-col gap-4 px-6">
             <div class="hidden">
                 <p class="text-g60 font-semibold text-sm pb-2">Username</p>
