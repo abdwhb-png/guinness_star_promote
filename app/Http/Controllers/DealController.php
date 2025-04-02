@@ -122,13 +122,15 @@ class DealController extends BaseController
         $error = null;
 
         if (!$deposit || $deposit <= 0) {
-            $error = 'Your account balance is not enough to continue.<br/> Please recharge your account.';
+            $error = __('messages.insufficient_funds');
         } else if (!$user->account->can_work) {
-            $error = 'Votre compte est actuellement suspendu !';
-        } else if (!$detailledDeals->counts['pending']) {
-            $error = 'Vous avez déjà complété toutes les tâches disponibles ! <br> Revenez demain pour plus de tâches.';
+            $error = __('messages.can_not_work');
+        } else if (!$detailledDeals->counts['pending'] && !$detailledDeals->status['all_done']) {
+            $error = __('messages.no_deal_available');
+        } else if ($detailledDeals->status['all_done']) {
+            $error = __('messages.deals_completed');
         } else if (!$detailledDeals->current) {
-            $error = 'Aucune tâche disponible actuellement. <br> Essayez plus tard.';
+            $error = __('messages.deal_unavailable');
         }
 
         if ($error) {
@@ -136,6 +138,11 @@ class DealController extends BaseController
                 'error' => $error,
             ], 403);
         }
+
+        // $pivotQuery = $this->pivotQuery($user->account->id, $detailledDeals->current->pivot->id);
+        // $pivotQuery->update([
+        //     'price' => $user->account->calculateDealProfit($detailledDeals->current->pivot->price),
+        // ]);
 
         return response()->json([
             'deal' => new DealResource($detailledDeals->current),
@@ -175,7 +182,7 @@ class DealController extends BaseController
         $pivot = $pivotQuery->firstOrFail();
 
         if ($pivot->status != StatusesEnum::PENDING->value) {
-            return back(303)->with('fail', 'This deal is not available right now. Refresh the page and try again!');
+            return back(303)->with('fail', __('messages.deal_unavailable'));
         }
 
         defer(function () use ($user, $pivot, $pivotQuery, $validated) {
@@ -187,7 +194,7 @@ class DealController extends BaseController
 
                 $pivotQuery->update([
                     'status' => StatusesEnum::CANCELLED->value,
-                    'message' => 'Your funds are insufficients to complete the deal. You\'ve got a frozen balance.',
+                    'message' => __('messages.frozen_balance'),
                 ]);
 
                 $notifData = new NotifData('Your funds are insufficients to complete the deal <b>' . $deal->name .
@@ -202,12 +209,11 @@ class DealController extends BaseController
                     'status' => StatusesEnum::PROCESSING->value,
                 ]);
                 UtilsHelper::notifySuperAdmins(new NotifData($user->call_name . ' is performing the deal ' . $deal->name));
-                // throw new \Exception('Stoped deal processing.');
             }
 
             event(new AccountDealEvent($user->account, $pivot->id, ['rating' => $validated['rating'], 'comment' => $validated['comment']]));
         });
 
-        return back(303)->with('status', 'Processing... Your commission will be sent to your wallet once done.');
+        return back(303)->with('status', __('messages.processing_deal'));
     }
 }

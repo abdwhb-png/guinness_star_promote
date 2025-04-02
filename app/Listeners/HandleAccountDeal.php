@@ -37,7 +37,7 @@ class HandleAccountDeal implements ShouldQueue
                 $pivot = $pivotQuery->firstOrFail();
 
                 // $profit = $this->getProfit($event->account, $event->pivot_id);
-                $profit = $this->calculateProfit($event->account, $pivot->price);
+                $profit = $event->account->calculateDealProfit($pivot->price);
 
                 if ($pivot->status == StatusesEnum::CANCELLED->value) {
                     $transac = $event->account->giveMoney(
@@ -74,15 +74,6 @@ class HandleAccountDeal implements ShouldQueue
         );
 
         $event->account->user->notify(new DefaultNotif($notifData));
-    }
-
-    protected function calculateProfit(UserAccount $account, $price): float
-    {
-        $ratio = $account->profit_ratio / 100;
-        if ($price <= 0 || $price === null) {
-            $price = $account->deposit;
-        }
-        return $price * $ratio;
     }
 
     protected function getProfit(UserAccount $account, int $id)

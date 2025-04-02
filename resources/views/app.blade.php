@@ -20,6 +20,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/bold/style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/fill/style.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/phosphor-icons/duotone/style.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <!-- Scripts -->
     @routes
@@ -50,7 +51,7 @@
             }
         }
     </script>
-    <script src="{{ asset('js/gtranslate.js') }}" defer></script>
+    <script src="{{ asset('js/gtranslate.js?v=1') }}" defer></script>
 
     {{-- <script src="{{ asset('js/bg-beams.js') }}"></script> --}}
 

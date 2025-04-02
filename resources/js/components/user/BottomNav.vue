@@ -8,9 +8,9 @@ const navs = [
         route: "dashboard",
     },
     {
-        name: "Account",
-        icon: "ph ph-user",
-        route: "account",
+        name: "Informations",
+        icon: "ph ph-info",
+        route: "more",
     },
     {
         name: "Historique",
@@ -18,9 +18,9 @@ const navs = [
         route: "history",
     },
     {
-        name: "Infos",
-        icon: "ph ph-info",
-        route: "more",
+        name: "Account",
+        icon: "ph ph-user",
+        route: "account",
     },
     // {
     //     name: "Start",

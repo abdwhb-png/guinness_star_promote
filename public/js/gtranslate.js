@@ -548,6 +548,20 @@
                 fire_event(teCombo, "change");
                 fire_event(teCombo, "change");
             }
+            
+            try {
+                fetch("/change-language", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        lang: lang,
+                    }),
+                })
+            } catch (error) {
+                console.warn("Failed to change language", error);
+            }
         };
         window.googleTranslateElementInit2 = function () {
             new google.translate.TranslateElement(

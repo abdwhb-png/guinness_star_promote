@@ -9,7 +9,6 @@ import TopSection from "@/components/user/TopSection.vue";
 import BottomNav from "@/components/user/BottomNav.vue";
 import HelpCenter from "@/components/user/HelpCenter.vue";
 import Tcs from "@/components/user/Tcs.vue";
-import AppLogoIcon from "@/components/AppLogoIcon.vue";
 import BottomModal from "@/components/user/BottomModal.vue";
 import BalanceInfo from "@/components/user/BalanceInfo.vue";
 
@@ -95,12 +94,6 @@ onMounted(() => {
 
         <!-- AUTH -->
         <main v-else class="container bg-white min-h-screen" :class="isAuth ? 'pt-2 pb-24' : 'pb-8'">
-            <a href="/" class="flex justify-center items-center gap-2 self-center font-medium mb-3">
-                <div class="flex h-8 w-8 items-center justify-center">
-                    <AppLogoIcon class="size-8 fill-current text-black dark:text-white" />
-                </div>
-                <span class="display-3 text-g60 font-bold" translate="no">{{ page.props.name }}</span>
-            </a>
             <TopSection :title="props.title || page.props.name" />
 
             <!-- auth slot -->

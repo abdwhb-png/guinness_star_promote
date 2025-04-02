@@ -14,13 +14,21 @@
     box-shadow: inset 0 1px 1px 1px rgba(172, 171, 171, 0.9),
         0 20px 27px 0 rgba(0, 0, 0, 0.05) !important;
     backdrop-filter: saturate(200%) blur(30px);
-    webkit-backdrop-filter: saturate(200%) blur(30px);
+    -webkit-backdrop-filter: saturate(200%) blur(30px);
     background-color: rgba(255, 255, 255, 0.8) !important;
     transition: box-shadow 0.25s ease-in, background-color 0.25s ease-in;
 }
 </style>
 
 <template>
+    <a href="/" class="flex justify-center items-center gap-2 self-center font-medium mb-3">
+        <div class="flex h-8 w-8 items-center justify-center z-[1020]">
+            <AppLogoIcon class="size-8 fill-current text-black dark:text-white" />
+        </div>
+        <span class="display-3 text-g60 font-bold animate__animated" translate="no" ref="appLogo">{{
+            $page.props.name
+        }}</span>
+    </a>
     <div class="flex justify-between items-center px-4" :class="['sticky', 'top-nav', { scrolled: isScrolled }]">
         <div class="flex items-center justify-center size-10 rounded-full bg-white cursor-pointer"
             @click="userStore.showAccount = true">
@@ -47,8 +55,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useUserStore } from "@/stores/user";
+import AppLogoIcon from "@/components/AppLogoIcon.vue";
 import RightModal from "@/components/user/RightModal.vue";
 import Notifications from "@/components/user/Notifications.vue";
 
@@ -60,6 +69,7 @@ defineProps({
 
 const userStore = useUserStore();
 const isScrolled = ref(false);
+const appLogo = ref();
 const showNotifs = ref(false);
 
 const getNotifications = () => {
@@ -70,6 +80,18 @@ const getNotifications = () => {
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 0;
 };
+
+watch(isScrolled, (value) => {
+    if (appLogo.value) {
+        if (!value) {
+            appLogo.value.classList.add('animate__fadeInDown');
+        } else {
+            setTimeout(() => {
+                appLogo.value.classList.remove('animate__fadeInDown');
+            }, 1000);
+        }
+    }
+});
 
 onMounted(() => {
     window.addEventListener("scroll", handleScroll);

@@ -57,10 +57,13 @@ onMounted(async () => {
         <div v-if="!showLoader && !deal" class="loader-container">
             <Message severity="error" icon="pi pi-exclamation-circle">
                 <div v-html="errorMsg || 'Something went wrong. Please try again.'"></div>
-                <Link href="/more" class="link">Contact support</Link>&nbsp;or&nbsp;<button type="button"
-                    class="underline text-black" onclick="reloadPage()">reload
-                    page
-                </button>.
+                <div class="text-sm">
+                    If needed, you can&nbsp;
+                    <Link href="/more" class="link">contact support</Link>&nbsp;or&nbsp;<button type="button"
+                        class="text-black" onclick="reloadPage()">reload
+                        page
+                    </button>.
+                </div>
             </Message>
         </div>
 
@@ -139,7 +142,7 @@ onMounted(async () => {
                     </div>
                     <div class="text-g50 flex flex-col mx-3">
                         <p class="flex justify-between">
-                            <span>Popularity</span> <span>{{ "%" + deal.popularity }}</span>
+                            <span>Popularity</span> <span>{{ deal.popularity + "%" }}</span>
                         </p>
                         <p class="flex justify-between">
                             <span>Tags</span>

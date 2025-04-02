@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Membership;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\DealController;
@@ -8,6 +9,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Resources\SiteSettingResource;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\NotificationController;
+
+Route::post('change-language', function (Request $request) {
+    if (in_array($request->lang, config('vars.translatable_locales'))) {
+        session()->put('language', $request->lang);
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false]);
+})->name('change-language');
 
 Route::middleware('auth')->group(function () {
     Route::resources([

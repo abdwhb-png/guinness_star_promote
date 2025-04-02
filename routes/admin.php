@@ -40,6 +40,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::controller(UsersController::class)->group(function () {
                 Route::put('/set-negative/{id}', 'setNegative')->name('set-negative');
                 Route::post('/reset-deals/{user}', 'resetDeals')->name('reset-deals');
+                Route::post('/revoke-deals/{user}', 'revokeDeals')->name('revoke-deals');
                 Route::post('/defroze/{user}', 'defroze')->name('defroze');
             });
 

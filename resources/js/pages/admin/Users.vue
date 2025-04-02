@@ -43,11 +43,15 @@ const page = usePage();
                     <!-- action toolbar -->
                     <Toolbar class="mb-2 bg-gray-100">
                         <template #start>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2 me-4">
                                 <Avatar shape="circle" :image="data.profile_photo_url"
                                     style="width: 32px; height: 32px;" />
                                 <CopyBtn :text="data.call_name" class="text-blue-500 font-bold uppercase" />
                             </div>
+
+                            <Button as="a" label="Transactions" :href="route(page.props.routePrefix + 'transactions', {
+                                search: data.call_name,
+                            })" severity="secondary" icon="pi pi-arrow-right-arrow-left" size="small" />
                         </template>
 
                         <template #end>

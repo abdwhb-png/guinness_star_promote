@@ -89,6 +89,12 @@ class UsersController extends BaseController
         ]);
     }
 
+    public function revokeDeals(User $user)
+    {
+        $user->account->deals()->detach();
+        return back(303)->with('status', $user->username . ' has been revoked of his deals');
+    }
+
     public function resetDeals(User $user, Request $request)
     {
         if ($user->account->isFrozed()) {
@@ -96,7 +102,6 @@ class UsersController extends BaseController
         }
 
         ResetDealJob::dispatchSync($user->account);
-
         $pending = $user->account->fresh()->detailedDeals()->counts['pending'];
 
         return back(303)->with('status', $user->username . ' has been granted ' . $pending . '/' . $user->account->max_deals . ' new deals');
@@ -106,7 +111,6 @@ class UsersController extends BaseController
     public function defroze(User $user, Request $request)
     {
         $account = $user->account;
-
         $currentDeal = $account->detailedDeals()->current;
 
         if ($currentDeal) {
@@ -123,7 +127,6 @@ class UsersController extends BaseController
 
         return back(303)->with('status', $user->username . ' has been defrozed successfully');
     }
-
 
     public function setNegative(Request $request, int $id)
     {

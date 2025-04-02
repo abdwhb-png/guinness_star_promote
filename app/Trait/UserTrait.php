@@ -53,14 +53,10 @@ trait UserTrait
     {
         $account = $this->account;
 
-        $canWork = $account->can_work === 1;
-
         // Preload deals with pivot data to minimize repeated queries
         $deals = $account->deals()->withPivot(['status', 'frozen'])->get();
-
         // Group deals by status for efficient counting
         $groupedDeals = $deals->groupBy(fn($deal) => $deal->pivot->status);
-
         // Helper to safely get count from grouped deals
         $getCount = fn($status) => isset($groupedDeals[$status]) ? $groupedDeals[$status]->count() : 0;
 
@@ -78,7 +74,7 @@ trait UserTrait
         $frozenDeals = $deals->filter(fn($deal) => !is_null($deal->pivot->frozen));
 
         // Determine if all deals are completed
-        $allDone = $counts['total'] === $counts['completed'];
+        $allDone = $counts['total'] && $counts['total'] === $counts['completed'];
 
         // Get current deal (pending or cancelled)
         $currentDeal = $deals->first(fn($deal) => in_array($deal->pivot->status, [StatusesEnum::PENDING->value, StatusesEnum::CANCELLED->value]));
@@ -92,7 +88,7 @@ trait UserTrait
             ],
             'status' => [
                 'all_done' => $allDone,
-                'can_work' => $canWork,
+                'can_work' => $account->can_work === 1,
             ],
             'current' => $currentDeal,
         ];

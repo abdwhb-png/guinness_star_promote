@@ -8,6 +8,8 @@ enum ConfigEnum: string
     case APP_PREFIX = '';
     case ADMIN_PAGE_DIR = 'admin/';
     case APP_PAGE_DIR = 'user/';
+    case ADMIN_LOCALE = 'en';
+    case APP_LOCALE = 'fr';
 
     case CHECK_PWD_WITHDRAWAL = 'withdrawal.password_confirmed_at';
     case CHECK_PWD_AUTH = 'auth.password_confirmed_at';

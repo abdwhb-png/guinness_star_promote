@@ -66,8 +66,8 @@ watch(() => props.data, () => {
 }, { immediate: true });
 
 function confirmAction(id, type) {
+    const confParams = confirmParams(type, id)
     const params = {
-        ...confirmParams(type, id),
         group: `${USERNAME.value}_confirm${type}`,
         message: "Do you want to " + type + " " + USERNAME.value + " account?",
         header: type == "Delete" ? "Danger Zone" : "Confirmation",
@@ -83,9 +83,10 @@ function confirmAction(id, type) {
             label: type,
             severity: type == "Delete" ? "danger" : "default",
         },
+        ...confParams,
         accept: () => {
             loading.value = true;
-            confirmParams(type, id).accept();
+            confParams.accept();
         },
     };
 
@@ -97,6 +98,7 @@ function confirmAction(id, type) {
     <ConfirmDialog :group="`${USERNAME}_confirmDelete`"></ConfirmDialog>
     <ConfirmDialog :group="`${USERNAME}_confirmGrantDeals`"></ConfirmDialog>
     <ConfirmDialog :group="`${USERNAME}_confirmDefroze`"></ConfirmDialog>
+    <ConfirmDialog :group="`${USERNAME}_confirmRevokeDeals`"></ConfirmDialog>
 
     <Dialog @hide="onUserDialogHide" v-model:visible="userDialog.show" modal maximizable :dismissable-mask="true"
         :style="{ width: userDialog.width || '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
@@ -130,22 +132,22 @@ function confirmAction(id, type) {
 
         <ConfirmsPassword @confirmed="confirmAction(data.id, 'GrantDeals')">
             <Button type="button" :loading="loading" label="Grant/Reset Deals" icon="pi pi-th-large" severity="info"
-                :size="buttonSize" :disabled="!CAN" @click="" />
+                :size="buttonSize" :disabled="!CAN" />
+        </ConfirmsPassword>
+
+        <ConfirmsPassword @confirmed="confirmAction(data.id, 'RevokeDeals')">
+            <Button type="button" :loading="loading" label="Revoke Deals" icon="pi pi-times" severity="danger" outlined
+                :size="buttonSize" :disabled="!CAN" />
         </ConfirmsPassword>
 
         <Button v-if="data.isFrozed" type="button" :loading="loading" label="Defroze" severity="success" outlined raised
             icon="pi pi-check" :size="buttonSize" :disabled="!CAN" @click="confirmAction(data.id, 'Defroze')" />
 
-        <Button as="a" label="Transacs." :href="route($page.props.routePrefix + 'transactions', {
-            search: data.call_name,
-        })
-            " severity="secondary" icon="pi pi-arrow-right-arrow-left" :size="buttonSize" />
-
         <Button @click="selectUser('coLogs', data)" label="Co. Logs" outlined severity="contrast" icon="pi pi-sign-in"
             :size="buttonSize" />
 
         <ConfirmsPassword @confirmed="confirmAction(data.id, 'Delete')">
-            <Button type="button" :loading="loading" label="Delete" outlined icon="pi pi-trash" :disabled="!CAN"
+            <Button type="button" :loading="loading" label="Delete" icon="pi pi-trash" :disabled="!CAN"
                 severity="danger" :size="buttonSize" />
         </ConfirmsPassword>
     </div>

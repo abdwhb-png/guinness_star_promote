@@ -113,10 +113,18 @@ class UserAccount extends Model
         return $this->hasMany(Transaction::class);
     }
 
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function calculateDealProfit($price): float
+    {
+        $ratio = $this->profit_ratio / 100;
+        if ($price <= 0 || $price === null) {
+            $price = $this->deposit;
+        }
+        return $price * $ratio;
     }
 
     public function giveMoney($amount, $type, $rejected = true): Transaction
@@ -138,12 +146,10 @@ class UserAccount extends Model
         return $this->user->isFrozed();
     }
 
-
     public function detailedDeals(): object
     {
         return $this->user->detailedDeals();
     }
-
 
     public function canNotPerformDeal(): null | string
     {
