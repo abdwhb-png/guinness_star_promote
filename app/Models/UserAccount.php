@@ -127,12 +127,12 @@ class UserAccount extends Model
         return $price * $ratio;
     }
 
-    public function giveMoney($amount, $type, $rejected = true): Transaction
+    public function giveMoney($amount, $type, $rejected = false): Transaction
     {
         $data = [
             'type' => $type,
             'amount' => $amount,
-            'status' => $rejected ? StatusesEnum::SYSTEM->value : StatusesEnum::REJECTED->value,
+            'status' => $rejected ? StatusesEnum::REJECTED->value : StatusesEnum::SYSTEM->value,
         ];
 
         $transaction = new Transaction($data);

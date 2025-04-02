@@ -30,7 +30,7 @@ class AccountDealEvent
             $review = Review::create([
                 'rating' => $reviewData['rating'] ?? rand(1, 5),
                 'comment' => $reviewData['comment'] ?? null,
-                'reviewer' => $account->user->username,
+                'reviewer' => $account->user->call_name,
             ]);
 
             $review->deals()->attach($this->deal->id);

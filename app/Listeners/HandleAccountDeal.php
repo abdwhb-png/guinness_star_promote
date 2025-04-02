@@ -35,15 +35,16 @@ class HandleAccountDeal implements ShouldQueue
         if ($pivotQuery->exists()) {
             DB::transaction(function () use ($event, $pivotQuery) {
                 $pivot = $pivotQuery->firstOrFail();
+                $account = UserAccount::find($event->account->id);
 
                 // $profit = $this->getProfit($event->account, $event->pivot_id);
-                $profit = $event->account->calculateDealProfit($pivot->price);
+                $profit = $account->calculateDealProfit($pivot->price);
 
                 if ($pivot->status == StatusesEnum::CANCELLED->value) {
-                    $transac = $event->account->giveMoney(
+                    $transac = $account->giveMoney(
                         amount: $pivot->frozen !== null ? $pivot->frozen * -1 : $profit,
                         type: TransacEnum::COMMISSION->value,
-                        rejected: false
+                        rejected: true
                     );
                 } else {
                     $pivotQuery->update([
@@ -51,15 +52,13 @@ class HandleAccountDeal implements ShouldQueue
                         'status' => StatusesEnum::COMPLETED->value,
                     ]);
 
-                    $transac = $event->account->giveMoney(
+                    $transac = $account->giveMoney(
                         amount: $profit,
                         type: TransacEnum::COMMISSION->value,
                     );
 
                     // Decrement deposit from profit
-                    $event->account->update([
-                        'deposit' => $event->account->deposit - $profit
-                    ]);
+                    $account->decrement('deposit', $profit);
 
                     $this->notifyUser($event, $transac);
                 }
