@@ -42,7 +42,7 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->getCredentials(), $this->boolean('remember'))) {
+        if (! Auth::attempt($this->getCredentials(), $this->boolean('remember', false))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -87,16 +87,17 @@ class LoginRequest extends FormRequest
     public function getCredentials()
     {
         $username = $this->get('username');
+        $password = $this->get('password');
 
         if ($this->isEmail($username)) {
             return [
                 'email' => $username,
-                'password' => $this->get('password')
+                'password' => $password
             ];
         } else if ($this->isPhone($username)) {
             return [
                 'phone' => $username,
-                'password' => $this->get('password')
+                'password' => $password
             ];
         }
 
@@ -115,11 +116,6 @@ class LoginRequest extends FormRequest
 
     private function isPhone($param)
     {
-        $factory = $this->container->make(ValidationFactory::class);
-
-        return !$factory->make(
-            ['username' => $param],
-            ['username' => 'numeric']
-        )->fails();
+        return preg_match('/^\+?[0-9]{7,15}$/', $param);
     }
 }
