@@ -38,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
                     'user_id' => $event->user->id,
                     'ip_address' => $ip,
                     'user_agent' => request()->userAgent(),
+                    'country' => '...',
                 ]);
                 AuthJob::dispatch($coLog, $ip);
             }
