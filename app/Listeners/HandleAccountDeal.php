@@ -57,7 +57,9 @@ class HandleAccountDeal implements ShouldQueue
                     );
 
                     // Decrement deposit from profit
-                    $event->account->decrement('deposit', $profit);
+                    $event->account->update([
+                        'deposit' => $event->account->deposit - $profit
+                    ]);
 
                     $this->notifyUser($event, $transac);
                 }
