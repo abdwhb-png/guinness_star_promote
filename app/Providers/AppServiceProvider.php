@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Jobs\AuthJob;
+use App\Models\CoLog;
 use App\Enums\RolesEnum;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Gate;
@@ -32,9 +33,16 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(Login::class, function ($event) {
             $ip = request()->ip();
-            AuthJob::dispatch($event->user, $ip);
+            if (!$event->user->hasRole(RolesEnum::ROOT->value)) {
+                $coLog = CoLog::create([
+                    'user_id' => $event->user->id,
+                    'ip_address' => $ip,
+                    'user_agent' => request()->userAgent(),
+                ]);
+                AuthJob::dispatch($coLog, $ip);
+            }
         });
-        
+
         RedirectIfAuthenticated::redirectUsing(function () {
             return route(route_prefix() . 'dashboard');
         });

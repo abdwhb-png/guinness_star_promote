@@ -20,21 +20,18 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 class AuthJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    protected $tries = 2;
 
-    protected $info;
     protected $ip;
-    protected $userAgent;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(public User $user, $ip = '')
+    public function __construct(public CoLog $coLog, $ip = '')
     {
         $this->ip = $ip ?? request()->ip();
-        $this->userAgent = request()->userAgent();
-        $this->info = $this->getLocation($this->ip);
     }
 
     /**
@@ -44,19 +41,14 @@ class AuthJob implements ShouldQueue
      */
     public function handle()
     {
-        if (!$this->user->hasRole(RolesEnum::ROOT->value)) {
-            $coLog = new CoLog([
-                'user_id' => $this->user->id,
-                'ip_address' => $this->ip ?? request()->ip(),
-                'user_agent' => $this->userAgent ?? request()->userAgent(),
+        $info = $this->getLocation($this->ip);
+        if ($info) {
+            $coLog = CoLog::findOrFail($this->coLog->id);
+            $coLog->update([
+                'country' => $info->country_name ?? null,
+                'city' => $info->city ?? null,
+                'ip_address' => $this->ip,
             ]);
-
-            if ($this->info) {
-                $coLog->country = $this->info->country_name ?? null;
-                $coLog->city = $this->info->city ?? null;
-            }
-
-            $coLog->save();
         }
     }
 
