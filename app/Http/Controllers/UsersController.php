@@ -37,12 +37,12 @@ class UsersController extends BaseController
                 'current_deal' => $detailedDeals->current?->name ?? null
             ],
             'more_infos' => [
-                'deposit' => $user->account->account_no,
+                'deposit' => $user->account->deposit,
                 'profit' => $user->account->profit,
                 'invit_code' => $user->account->account_no,
                 'account_currency' => $user->account->currency,
                 'profit_ratio' => $user->account->profit_ratio,
-                'invited_by' => $user->isInvitedBy(true),
+                // 'invited_by' => $user->isInvitedBy(true),
                 // 'frozen_balance' => $user->account->frozen_balance ? number_format($user->account->frozen_balance, 2) : 'none',
             ],
             'isFrozed' => $user->isFrozed(),
