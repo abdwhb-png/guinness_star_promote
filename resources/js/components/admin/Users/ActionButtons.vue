@@ -127,6 +127,9 @@ function confirmAction(id, type) {
         <Button label="Edit" :size="buttonSize" severity="primary" icon="pi pi-pencil" :disabled="!CAN"
             @click="selectUser('edit', props.data)" />
 
+        <Button @click="selectUser('coLogs', data)" label="Co. Logs" outlined severity="contrast" icon="pi pi-sign-in"
+            :size="buttonSize" />
+
         <Button label="Deals" icon="pi pi-th-large" severity="primary" outlined raised :size="buttonSize"
             :disabled="!CAN" @click="selectUser('deals', data)" />
 
@@ -142,9 +145,6 @@ function confirmAction(id, type) {
 
         <Button v-if="data.isFrozed" type="button" :loading="loading" label="Defroze" severity="success" outlined raised
             icon="pi pi-check" :size="buttonSize" :disabled="!CAN" @click="confirmAction(data.id, 'Defroze')" />
-
-        <Button @click="selectUser('coLogs', data)" label="Co. Logs" outlined severity="contrast" icon="pi pi-sign-in"
-            :size="buttonSize" />
 
         <ConfirmsPassword @confirmed="confirmAction(data.id, 'Delete')">
             <Button type="button" :loading="loading" label="Delete" icon="pi pi-trash" :disabled="!CAN"

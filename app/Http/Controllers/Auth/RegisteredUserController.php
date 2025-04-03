@@ -6,6 +6,7 @@ use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Enums\RolesEnum;
+use App\Helpers\ConfigHelper;
 use App\Models\UserAccount;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
@@ -67,6 +68,7 @@ class RegisteredUserController extends Controller
                 ],
                 [
                     'withdrawal_password' => $validated['withdrawal_password'],
+                    'currency' => ConfigHelper::getDefaultCurrency(),
                 ]
             );
         }
