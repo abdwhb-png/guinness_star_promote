@@ -48,10 +48,10 @@ class RegisteredUserController extends Controller
         ], $mergeRules));
 
         $role = is_admin_domain() ? RolesEnum::ADMIN->value : RolesEnum::USER->value;
-        $referrer = UserAccount::where('account_no', $validated['invitation_code'])->firstOrFail();
+        $referer = UserAccount::where('account_no', $validated['invitation_code'])->firstOrFail();
 
         $user = User::create([
-            'invited_by' => $referrer->user_id,
+            'invited_by' => $referer->user->id,
             'phone' => $request->phone,
             'username' => $request->username,
             'email' => $request->email,
