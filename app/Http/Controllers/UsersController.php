@@ -29,7 +29,7 @@ class UsersController extends BaseController
                 'username' => $user->username,
                 'email' => $user->email,
                 'total_balance' => number_format(($user->account->balance ?? 0), 2),
-                // 'frozen_balance' => $user->account->frozen_balance ? number_format($user->account->frozen_balance, 2) : 'none',
+                ...$user->getInfos()->toArray()
             ],
             'deals_details' => [
                 'counts' => $detailedDeals->counts,
@@ -37,11 +37,13 @@ class UsersController extends BaseController
                 'current_deal' => $detailedDeals->current?->name ?? null
             ],
             'more_infos' => [
+                'deposit' => $user->account->account_no,
+                'profit' => $user->account->profit,
                 'invit_code' => $user->account->account_no,
-                'currency' => $user->account->currency,
+                'account_currency' => $user->account->currency,
                 'profit_ratio' => $user->account->profit_ratio,
                 'invited_by' => $user->isInvitedBy(true),
-                ...$user->getInfos()->toArray()
+                // 'frozen_balance' => $user->account->frozen_balance ? number_format($user->account->frozen_balance, 2) : 'none',
             ],
             'isFrozed' => $user->isFrozed(),
             'isSuperAdmin' => $user->isSuperAdmin(),
