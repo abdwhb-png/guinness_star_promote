@@ -29,7 +29,8 @@ class UsersController extends BaseController
                 'username' => $user->username,
                 'email' => $user->email,
                 'total_balance' => number_format(($user->account->balance ?? 0), 2),
-                // ...$user->getInfos()->toArray()
+                'invited_by' => $user->isInvitedBy(true),
+                'account_currency' => $user->account->currency,
             ],
             'deals_details' => [
                 'counts' => $detailedDeals->counts,
@@ -39,10 +40,9 @@ class UsersController extends BaseController
             'more_infos' => [
                 'deposit' => $user->account->deposit,
                 'profit' => $user->account->profit,
+                'profit_ratio' => $user->account->profit_ratio . '%',
                 'invit_code' => $user->account->account_no,
-                'account_currency' => $user->account->currency,
-                'profit_ratio' => $user->account->profit_ratio,
-                'invited_by' => $user->isInvitedBy(true),
+                // ...$user->getInfos()->toArray()
                 // 'frozen_balance' => $user->account->frozen_balance ? number_format($user->account->frozen_balance, 2) : 'none',
             ],
             'isFrozed' => $user->isFrozed(),
