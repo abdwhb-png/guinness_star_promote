@@ -17,11 +17,18 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         // Telescope::night();
 
+
+        $this->hideSensitiveRequestDetails();
+
         Telescope::avatar(function (string $id, string $email) {
             return User::find($id)->profile_photo_url;
         });
 
-        $this->hideSensitiveRequestDetails();
+        Telescope::tag(function (IncomingEntry $entry) {
+            return $entry->type === 'request'
+                ? ['path:' . $entry->content['path']]
+                : [];
+        });
 
         $isLocal = $this->app->environment('local');
         $isProduction = $this->app->environment('production');
