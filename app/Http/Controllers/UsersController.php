@@ -28,9 +28,7 @@ class UsersController extends BaseController
                 'phone' => $user->phone,
                 'username' => $user->username,
                 'email' => $user->email,
-                'invit_code' => $user->account->account_no,
                 'total_balance' => number_format(($user->account->balance ?? 0), 2),
-                'currency' => $user->account->currency,
                 // 'frozen_balance' => $user->account->frozen_balance ? number_format($user->account->frozen_balance, 2) : 'none',
             ],
             'deals_details' => [
@@ -39,6 +37,9 @@ class UsersController extends BaseController
                 'current_deal' => $detailedDeals->current?->name ?? null
             ],
             'more_infos' => [
+                'invit_code' => $user->account->account_no,
+                'currency' => $user->account->currency,
+                'profit_ratio' => $user->account->profit_ratio,
                 'invited_by' => $user->isInvitedBy(true),
                 ...$user->getInfos()->toArray()
             ],

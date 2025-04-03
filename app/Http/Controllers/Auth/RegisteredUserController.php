@@ -69,6 +69,8 @@ class RegisteredUserController extends Controller
                 [
                     'withdrawal_password' => $validated['withdrawal_password'],
                     'currency' => ConfigHelper::getDefaultCurrency(),
+                    'profit_ratio' => ConfigHelper::getProfitRatio(),
+                    'max_deals' => ConfigHelper::getMaxDeals(),
                 ]
             );
         }
