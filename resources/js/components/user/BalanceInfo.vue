@@ -27,16 +27,19 @@ const withCurrency = (amount) => {
 };
 </script>
 <template>
+    <h4 class="text-lg font-semibold text-center mb-4">Total Balance: <span
+            :class="account.balance ? 'value-text' : 'text-red-500'">{{
+                withCurrency(account.balance) }}</span></h4>
     <div class="px-4 flex flex-col gap-3">
         <div class="p-4 rounded-xl border border-g30 bg-g20">
             <div class="flex justify-between items-center gap-3">
                 <div class="flex justify-start items-center gap-3">
                     <i class="ph-thin text-xl ph-currency-dollar"></i>
-                    <p class="text-sm font-medium">Account Balance</p>
+                    <p class="text-sm font-medium">Account Deposit</p>
                 </div>
 
                 <p class="value-text font-medium">
-                    {{ withCurrency(account.balance) }}
+                    {{ withCurrency(account.deposit) }}
                 </p>
             </div>
         </div>
