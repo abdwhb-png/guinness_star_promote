@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->integer('max_deals')->default(ConfigEnum::MAX_DEALS);
             $table->decimal('profit_ratio')->default(ConfigEnum::DEFAULT_PROFIT_RATIO);
+            $table->decimal('min_balance')->default(5000);
             $table->string('base_currency')->default(ConfigEnum::DEFAULT_CURRENCY);
             $table->decimal('welcome_bonus')->nullable()->default(ConfigEnum::WELCOME_BONUS);
             $table->boolean('enable_welcome_bonus')->nullable()->default(false);

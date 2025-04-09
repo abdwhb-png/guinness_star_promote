@@ -100,12 +100,12 @@ class UsersController extends BaseController
 
     public function resetDeals(User $user, Request $request)
     {
-        if ($user->account->isFrozed()) {
+        if ($user->isFrozed()) {
             throw ValidationException::withMessages(['error' => 'Please defroze this user before resetting his deals']);
         }
 
         ResetDealJob::dispatchSync($user->account);
-        $pending = $user->account->fresh()->detailedDeals()->counts['pending'];
+        $pending = $user->fresh()->detailedDeals()->counts['pending'];
 
         return back(303)->with('status', $user->username . ' has been granted ' . $pending . '/' . $user->account->max_deals . ' new deals');
     }
@@ -114,7 +114,7 @@ class UsersController extends BaseController
     public function defroze(User $user, Request $request)
     {
         $account = $user->account;
-        $currentDeal = $account->detailedDeals()->current;
+        $currentDeal = $user->detailedDeals()->current;
 
         if ($currentDeal) {
             $account->deals()->updateExistingPivot($currentDeal->id, [

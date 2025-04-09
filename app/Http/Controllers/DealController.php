@@ -172,7 +172,7 @@ class DealController extends BaseController
         $user = $request->user();
         $validated = $request->validate($this->performDealRules());
 
-        if ($error = $user->account->canNotPerformDeal()) {
+        if ($error = $user->canNotPerformDeal()) {
             throw ValidationException::withMessages([
                 'error' => $error
             ]);

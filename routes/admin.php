@@ -22,7 +22,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('/data-totals', 'getDataTotals')->name('data-totals');
             });
             Route::get('/users', [UsersController::class, 'index'])->name('users');
-            Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions');
+            Route::resource('/transactions', TransactionsController::class)->only([
+                'index',
+                'store',
+            ])->names('transactions');
             Route::get('/deals', [DealsController::class, 'index'])->name('deals');
             Route::post('/process-deal', [DealController::class, 'processDeal'])->name('process-deal');
         });
@@ -44,8 +47,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('/defroze/{user}', 'defroze')->name('defroze');
             });
 
-            Route::delete('/deals', [DealsController::class, 'destroy'])->name('deals.delete');
             Route::delete('/transactions', [TransactionsController::class, 'destroy'])->name('transactions.delete');
+            Route::delete('/deals', [DealsController::class, 'destroy'])->name('deals.delete');
 
             Route::resource('roles-perms', RolePermissionController::class)->only([
                 'index',

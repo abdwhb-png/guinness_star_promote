@@ -33,13 +33,12 @@ class GrantDeals extends Command
 
         $count = 0;
         UserAccount::whereNotNull('deposit')->get()->each(function ($account) use (&$count) {
-            if ($account->deposit > 0 && $account->user->detailedDeals()->status['all_done']) {
+            if ($account->canHaveDeals()) {
                 $this->info("Granting deals to user {$account->user->call_name}...");
                 ResetDealJob::dispatch($account);
                 $count++;
             }
         });
-
 
         $notifData = new NotifData($count . ' users have been granted daily new deals');
         $notifData->setSubject('Automatic deals reset');

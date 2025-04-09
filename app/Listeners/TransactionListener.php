@@ -68,8 +68,10 @@ class TransactionListener
         $msg = '';
 
         if ($transaction->type == TransacEnum::WITHDRAWAL->value) {
+            \Log::info('Withdrawal transaction', ['transaction' => $transaction]);
             if ($this->makeWithdrawal($transaction, $account)) {
                 $msg = "We have successfully processed your withdrawal request for " . $transaction->textAmount() . ".";
+                \Log::info('Withdrawal transaction successful : ' . $msg);
             }
         }
 

@@ -95,7 +95,7 @@ const submit = () => {
             content="For your security, please enter your withdrawal password to continue."
             @confirmed="start('withdrawal')">
             <button class="primaryButtonOutline w-full !text-sm mt-4 flex justify-center items-center">
-                <i class="ph ph-hand-deposit text-lg me-0.5"></i> Withdraw
+                <i class="ph ph-hand-deposit text-lg me-0.5"></i> Withdrawal
             </button>
         </AskForPassword>
     </div>
@@ -158,8 +158,8 @@ const submit = () => {
                     </div>
                 </div>
                 <div class="flex justify-start items-center gap-3 mt-4">
-                    <Button @click="submit" :label="success ? 'Restart' : 'Confirm'" :loading="form.processing" unstyled
-                        class="w-full" :class="success ? 'primaryButtonOutline' : 'primaryButton'
+                    <Button @click="submit" :label="success ? '' : 'Confirm'" :icon="success ? 'pi pi-refresh' : ''"
+                        :loading="form.processing" unstyled class="w-full" :class="success ? 'primaryButtonOutline' : 'primaryButton'
                             " />
                 </div>
             </template>
@@ -169,6 +169,7 @@ const submit = () => {
     <van-popup v-model:show="showPMethod" position="right" :style="{ width: '100%', height: '100%' }">
         <RightModal title="Select Payment Methods" @close="showPMethod = false">
             <template #content>
+                <h2 class="text-g60 font-semibold text-lg pb-2 text-center">Choose your preferred payment method.</h2>
                 <PaymentMethods :section="pMethodSection" @selected="handleSelectedPMethod" />
             </template>
         </RightModal>

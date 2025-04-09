@@ -42,6 +42,10 @@ const submit = () => {
                     <InputNumber :min="0" :minFractionDigits="2" prefix="% " v-model="form.profit_ratio" fluid />
                 </div>
                 <div class="mb-4">
+                    <h5 class="fw-bold">Minimum balance</h5>
+                    <InputNumber :min="0" :minFractionDigits="2" :prefix="currency" v-model="form.min_balance" fluid />
+                </div>
+                <div class="mb-4">
                     <h5 class="fw-bold">Base Daily Deals</h5>
                     <InputNumber :min="1" v-model="form.max_deals" fluid />
                 </div>

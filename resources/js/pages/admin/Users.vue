@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { Deferred, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Deferred, usePage } from '@inertiajs/vue3'
 import CustomDataTable from '@/components/admin/CustomDataTable.vue';
 import CopyBtn from '@/components/shared/CopyBtn.vue';
 import ShowKeyValue from '@/components/shared/ShowKeyValue.vue';
 import ManageAdmins from "@/components/admin/Users/Admins.vue";
 import ActionButtons from '@/components/admin/Users/ActionButtons.vue';
-
+import NewTransaction from '@/components/admin/Users/NewTransaction.vue';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Users',
@@ -49,9 +49,13 @@ const page = usePage();
                                 <CopyBtn :text="data.call_name" class="text-blue-500 font-bold uppercase" />
                             </div>
 
-                            <Button as="a" label="Transactions" :href="route(page.props.routePrefix + 'transactions', {
-                                search: data.call_name,
-                            })" severity="secondary" icon="pi pi-arrow-right-arrow-left" size="small" />
+                            <div class="flex space-x-2">
+                                <NewTransaction :user="data" />
+
+                                <Button as="a" label="Transacs. List" :href="route(page.props.routePrefix + 'transactions.index', {
+                                    search: data.call_name,
+                                })" severity="secondary" icon="pi pi-arrow-right-arrow-left" size="small" />
+                            </div>
                         </template>
 
                         <template #end>

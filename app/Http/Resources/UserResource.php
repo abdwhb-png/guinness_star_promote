@@ -2,9 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\StatusesEnum;
-use App\Models\UserInfo;
-use App\Models\UserAccount;
 use Illuminate\Support\Arr;
 use App\Trait\ResourceTrait;
 use Illuminate\Http\Request;
@@ -23,7 +20,7 @@ class UserResource extends JsonResource
     {
         parent::__construct($resource);
 
-        $this->detailedDeals = $resource->account->detailedDeals();
+        $this->detailedDeals = $resource->detailedDeals();
         $this->currentDeal = $this->detailedDeals->current;
     }
 
