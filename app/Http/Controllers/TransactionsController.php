@@ -93,7 +93,7 @@ class TransactionsController extends BaseController
         }
 
         $account = $user->account;
-        if ($user->detailledDeals()->counts['total'] && $account->canHaveDeals()) {
+        if ($user->detailedDeals()->counts['total'] && $account->canHaveDeals()) {
             ResetDealJob::dispatchSync($account);
         }
 

@@ -55,6 +55,10 @@ onMounted(() => {
             email: page.props.auth.user.email,
         };
     }
+
+    if (window.doGtranslate) {
+        console.log(window.doGtranslate)
+    }
 });
 </script>
 
