@@ -210,6 +210,7 @@ trait ValidationRules
                 'enable_referal_bonus' => 'required|boolean',
                 'min_balance' => 'required|numeric',
                 'profit_ratio' => 'nullable|numeric',
+                'require_rating_comment' => 'required|boolean',
                 'telegram' => 'required|boolean',
                 'announcement' => 'nullable|string',
                 'tcs' => 'nullable|string',
