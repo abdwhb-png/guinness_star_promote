@@ -175,7 +175,7 @@ export function getSeverity(status) {
             return "danger";
 
         case "system":
-            return "contrast";
+            return "secondary";
 
         case "granted":
             return "info";

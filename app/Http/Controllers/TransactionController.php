@@ -55,7 +55,7 @@ class TransactionController extends BaseController
             $transaction->save();
         });
 
-        return back(303)->with('status', 'Transaction created successfully');
+        return back(303)->with('success', 'Transaction created successfully');
     }
 
     /**

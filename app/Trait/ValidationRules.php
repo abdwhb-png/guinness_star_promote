@@ -275,7 +275,7 @@ trait ValidationRules
     {
         return [
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|max:500',
+            'comment' => 'nullable|string|max:500',
             'pivot_id' => 'required|integer|exists:deal_user_account,id',
         ];
     }

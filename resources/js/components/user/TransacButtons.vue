@@ -1,15 +1,12 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
-import { useSiteStore } from "@/stores/site";
 import { copyToClipboard } from "@/utils";
-import { showSuccessToast, showFailToast, showNotify } from "vant";
+import { showNotify } from "vant";
 
 import AskForPassword from "@/components/user/AskForPassword.vue";
 import RightModal from "@/components/user/RightModal.vue";
 import PaymentMethods from "@/components/user/PaymentMethods.vue";
-
-const siteStore = useSiteStore();
 
 const showPopup = ref(false);
 const showPMethod = ref(false);
@@ -66,7 +63,7 @@ const submit = () => {
         },
         onSuccess: (page) => {
             showNotify({
-                message: page.props.flash.status,
+                message:"Transaction request sent.",
                 type: "success",
                 duration: 1000,
             });

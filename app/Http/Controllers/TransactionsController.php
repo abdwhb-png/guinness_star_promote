@@ -76,13 +76,14 @@ class TransactionsController extends BaseController
         $user = User::findOrFail($request->user_id);
 
         if ($request->type == TransacEnum::WITHDRAWAL->value) {
-            $transaction = new Transaction([
+            $transaction = Transaction::create([
                 'user_account_id' => $user->account->id,
                 'type' => $request->type,
                 'amount' =>  $request->amount,
+            ]);
+            $transaction->update([
                 'status' => StatusesEnum::APPROVED->value,
             ]);
-            $transaction->save();
         } else if ($request->type == TransacEnum::RECHARGE->value) {
             $transaction = $user->account->giveMoney($request->amount, $request->type);
         }

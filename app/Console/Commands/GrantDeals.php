@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Helpers\UtilsHelper;
+use App\NotifData;
+use App\Models\User;
+use App\Enums\RolesEnum;
 use App\Jobs\ResetDealJob;
 use App\Models\UserAccount;
-use App\NotifData;
+use App\Helpers\UtilsHelper;
 use Illuminate\Console\Command;
 
 class GrantDeals extends Command
@@ -31,6 +33,9 @@ class GrantDeals extends Command
     {
         $this->info('Starting grant:deals command...');
 
+        $allCount = User::role(RolesEnum::USER->value)->whereHas('account')->count();
+        $this->info("Total users account found: $allCount");
+
         $count = 0;
         UserAccount::whereNotNull('deposit')->get()->each(function ($account) use (&$count) {
             if ($account->canHaveDeals()) {
@@ -42,7 +47,7 @@ class GrantDeals extends Command
 
         $notifData = new NotifData($count . ' users have been granted daily new deals');
         $notifData->setSubject('Automatic deals reset');
-        $notifData->setBody('Users that have been granted deals are users with deposit and precedent deals completed.');
+        $notifData->setBody('Users that have been granted deals are users with deposit > 0 & no current deals or precedent deals completed.');
         UtilsHelper::notifyAdmins($notifData);
 
         $this->info("$count users have been granted daily new deals.");

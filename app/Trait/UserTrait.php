@@ -97,19 +97,19 @@ trait UserTrait
 
     public function canNotPerformDeal(): null | string
     {
-        $detailledDeals = $this->account->detailedDeals();
+        $detailedDeals = $this->detailedDeals();
 
         $error = null;
 
-        if ($detailledDeals->counts['total'] < 1) {
-            $detailledDeals = 'You dont have any deal right now ! Contact the customer service to get yours.';
+        if ($detailedDeals->counts['total'] < 1) {
+            $detailedDeals = 'You dont have any deal right now ! Contact the customer service to get yours.';
         }
 
-        if ($detailledDeals->status['all_done']) {
+        if ($detailedDeals->status['all_done']) {
             $error = 'You have completed all the available deals !';
         }
 
-        if (!$detailledDeals->status['can_work']) {
+        if (!$detailedDeals->status['can_work']) {
             $error = 'Your account cannot grab any deal right now ! Contact the customer service.';
         }
 
@@ -196,7 +196,7 @@ trait UserTrait
             $item = $this->parseHistoryItem($item);
             $item->pivot = $this->parseHistoryItem($item->pivot);
 
-            $detailedDeals = $this->account->detailedDeals();
+            $detailedDeals = $this->detailedDeals();
             $item->is_current = $detailedDeals->current ? $detailedDeals->current->id === $item->id : false;
             // $item->is_current = $this->currentDeal  ? $this->currentDeal->id === $item->id : false;
 

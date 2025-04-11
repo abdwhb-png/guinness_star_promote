@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('enable_welcome_bonus')->nullable()->default(false);
             $table->decimal('referal_bonus')->nullable()->default(ConfigEnum::REFERRAL_BONUS);
             $table->boolean('enable_referal_bonus')->nullable()->default(false);
+            $table->boolean('require_rating_comment')->nullable()->default(false);
             $table->integer('profit_max_on_first')->default(ConfigEnum::PROFIT_MAX_ON_FIRST);
             $table->string('availability_time')->nullable()->default('10:00 to 23:00 (UTC-05:00)');
             $table->string('frozen_balance_indic')->nullable()->default('Pinned balance where there is a pending combination product in process.');

@@ -49,6 +49,8 @@ const submit = () => {
                     <h5 class="fw-bold">Base Daily Deals</h5>
                     <InputNumber :min="1" v-model="form.max_deals" fluid />
                 </div>
+            </div>
+            <div class="md:flex flex-wrap gap-3">
                 <div class="mb-4">
                     <h5 class="fw-bold">Enable Welcome bonus ?</h5>
                     <Select :options="yesNo" option-label="label" option-value="value"
@@ -59,6 +61,8 @@ const submit = () => {
                     <InputNumber :min="0" :minFractionDigits="2" :prefix="currency" locale="en-US"
                         v-model="form.welcome_bonus" fluid />
                 </div>
+                </div>
+                <div class="md:flex flex-wrap gap-3">
                 <div class="mb-4">
                     <h5 class="fw-bold">Enable referal bonus ?</h5>
                     <Select :options="yesNo" option-label="label" option-value="value"
@@ -69,14 +73,20 @@ const submit = () => {
                     <InputNumber :min="0" :minFractionDigits="2" :prefix="currency" locale="en-US"
                         v-model="form.referal_bonus" fluid />
                 </div>
-                <div class="mb-4 hidden">
-                    <h5 class="fw-bold">Max profit on trial</h5>
-                    <InputNumber :min="0" :minFractionDigits="2" :prefix="currency" v-model="form.profit_max_on_first"
-                        fluid />
+                </div>
+                <div class="md:flex flex-wrap gap-3">
+                    <div class="mb-4">
+                    <h5 class="fw-bold">Require comment on deal rating ?</h5>
+                    <Select :options="yesNo" option-label="label" option-value="value" v-model="form.require_rating_comment" fluid />
                 </div>
                 <div class="mb-4">
                     <h5 class="fw-bold">Enable telegram notif ?</h5>
                     <Select :options="yesNo" option-label="label" option-value="value" v-model="form.telegram" fluid />
+                </div>
+                <div class="mb-4 hidden">
+                    <h5 class="fw-bold">Max profit on trial</h5>
+                    <InputNumber :min="0" :minFractionDigits="2" :prefix="currency" v-model="form.profit_max_on_first"
+                        fluid />
                 </div>
             </div>
             <div class="mb-4">

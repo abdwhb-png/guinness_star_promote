@@ -117,7 +117,7 @@ class DealController extends BaseController
     public function deal(): JsonResponse
     {
         $user = request()->user();
-        $detailledDeals = $user->detailedDeals();
+        $detailedDeals = $user->detailedDeals();
         $deposit = $user->account->deposit;
         $error = null;
 
@@ -125,11 +125,11 @@ class DealController extends BaseController
             $error = __('messages.insufficient_funds');
         } else if (!$user->account->can_work) {
             $error = __('messages.can_not_work');
-        } else if (!$detailledDeals->counts['pending'] && !$detailledDeals->status['all_done']) {
+        } else if (!$detailedDeals->counts['pending'] && !$detailedDeals->status['all_done']) {
             $error = __('messages.no_deal_available');
-        } else if ($detailledDeals->status['all_done']) {
+        } else if ($detailedDeals->status['all_done']) {
             $error = __('messages.deals_completed');
-        } else if (!$detailledDeals->current) {
+        } else if (!$detailedDeals->current) {
             $error = __('messages.deal_unavailable');
         }
 
@@ -139,13 +139,13 @@ class DealController extends BaseController
             ], 403);
         }
 
-        // $pivotQuery = $this->pivotQuery($user->account->id, $detailledDeals->current->pivot->id);
+        // $pivotQuery = $this->pivotQuery($user->account->id, $detailedDeals->current->pivot->id);
         // $pivotQuery->update([
-        //     'price' => $user->account->calculateDealProfit($detailledDeals->current->pivot->price),
+        //     'price' => $user->account->calculateDealProfit($detailedDeals->current->pivot->price),
         // ]);
 
         return response()->json([
-            'deal' => new DealResource($detailledDeals->current),
+            'deal' => new DealResource($detailedDeals->current),
         ]);
     }
 

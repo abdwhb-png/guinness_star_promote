@@ -59,7 +59,7 @@ class ResetDealJob implements ShouldQueue
                 }
             });
 
-            Log::channel('deals')->info($this->account->detailedDeals()->counts['pending'] . "/" . $this->maxDeals . " Deals granted successfully to -> " . $this->account->user->username);
+            Log::channel('deals')->info($this->account->user->detailedDeals()->counts['pending'] . "/" . $this->maxDeals . " Deals granted successfully to -> " . $this->account->user->username);
         } catch (\Exception $e) {
             Log::channel('deals')->error("Granting deals  to -> " . $this->account->user->username . " error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
         }

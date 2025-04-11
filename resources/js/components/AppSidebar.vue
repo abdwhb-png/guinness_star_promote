@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { ArrowLeftRight, BookOpen, Folder, LayoutGrid, ListMusic, MonitorCog, SquareArrowOutUpRight, Users } from 'lucide-vue-next';
+import { ArrowLeftRight, Bell, BookOpen, Folder, LayoutGrid, ListMusic, MonitorCog, SquareArrowOutUpRight, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -28,6 +28,11 @@ const mainNavItems: NavItem[] = [
         title: 'Deals',
         href: '/deals',
         icon: ListMusic,
+    },
+    {
+        title: 'Notifications',
+        href: '/notifications',
+        icon: Bell,
     },
 ];
 

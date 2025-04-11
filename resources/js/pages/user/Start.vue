@@ -44,7 +44,7 @@ onMounted(async () => {
 <template>
     <UserLayout title="Rating">
         <template #bottom>
-            <StartBottom :show-loader="showLoader" :deal="deal" @submited="getDeal()" />
+            <StartBottom :show-loader="showLoader" :deal="deal" :account="$page.props.auth.user.account" :require-comment="$page.props.config.settings.require_rating_comment" @submited="getDeal()" />
         </template>
 
         <div v-if="showLoader && !deal" class="loader-container">
