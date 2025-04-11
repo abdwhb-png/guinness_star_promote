@@ -50,7 +50,7 @@ trait UserAccountTrait
 
     public function canHaveDeals() : bool
     {
-        return $this->deposit > 0 && $this->user->detailedDeals()->status['all_done'];
+        return $this->deposit > 0 && $this->user->detailedDeals()->counts['total'] == 0;
     }
     
     // public function isFrozed(): bool

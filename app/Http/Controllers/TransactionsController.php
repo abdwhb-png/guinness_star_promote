@@ -70,6 +70,7 @@ class TransactionsController extends BaseController
         $request->validate([
             ...$this->transactionRules('create'),
             'user_id' => ['required', 'exists:users,id'],
+            'reset_deals' => ['sometimes', 'boolean']
         ]);
 
         $user = User::findOrFail($request->user_id);
