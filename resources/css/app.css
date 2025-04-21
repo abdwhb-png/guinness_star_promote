@@ -45,16 +45,21 @@ select {
 }
 
 #gt_float_wrapper {
-    /* display: none; */
     bottom: 60px !important;
 }
 
+@media (min-width: 768px) {
+    #gt_float_wrapper {
+        left: calc((100% - var(--side-width, 600px)) / 2) !important;
+    }
+}
+
 .gt_float_switcher {
-    font-size: 15px !important;
+    font-size: 13px !important;
 }
 
 .gt_float_switcher .gt-selected .gt-current-lang {
-    padding: 5px 8px !important;
+    padding: 3px 8px !important;
 }
 
 .gt_float_switcher img {

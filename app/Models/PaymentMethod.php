@@ -21,7 +21,7 @@ class PaymentMethod extends Model
     {
         return Attribute::make(
             // get: fn() => $this->img ? (config('app.env') == 'local' ? url('storage' . $this->img) : Storage::url($this->img)) : null,
-            get: fn() => $this->img ? (config('app.env') == 'local' ? url('storage' . $this->img) : asset($this->img)) : null,
+            get: fn() => $this->img ? (config('app.env') == 'local' ? url('storage' . $this->img) : asset('images' . $this->img)) : null,
         );
     }
 

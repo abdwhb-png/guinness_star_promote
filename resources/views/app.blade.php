@@ -42,9 +42,9 @@
             "native_language_names": true,
             "languages": @json(config('vars.translatable_locales')),
             "wrapper_selector": ".gtranslate_wrapper",
-            "switcher_horizontal_position": "right",
-            "switcher_vertical_position": "bottom",
-            // "float_switcher_open_direction": "left",
+            "switcher_horizontal_position": "left",
+            // "switcher_vertical_position": "bottom",
+            // "float_switcher_open_direction": "right",
             "detect_browser_language": {!! json_encode(config('app.env') === 'production') !!},
             "alt_flags": {
                 "en": "usa"
@@ -61,9 +61,10 @@
     <script src="{{ asset('/app/assets/js/plugins/plugin-custom.js') }}"></script>
 
     <script>
-        function reloadPage(){
+        function reloadPage() {
             window.location.reload()
         }
+
         function handleTogglePassword(container) {
             const passwordField = container.querySelector(".passwordField");
             const toggleIcon = container.querySelector("i");

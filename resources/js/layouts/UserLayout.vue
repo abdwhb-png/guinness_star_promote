@@ -1,44 +1,38 @@
 <script setup>
-import { usePage } from "@inertiajs/vue3";
-import { ref, onMounted, onBeforeMount } from "vue";
-import { router } from "@inertiajs/vue3";
-import { useUserStore } from "@/stores/user";
-import { usePusher } from "@/composables/usePusher";
-import ApplicationLogo from "@/components/shared/ApplicationLogo.vue";
-import TopSection from "@/components/user/TopSection.vue";
-import BottomNav from "@/components/user/BottomNav.vue";
-import HelpCenter from "@/components/user/HelpCenter.vue";
-import Tcs from "@/components/user/Tcs.vue";
-import BottomModal from "@/components/user/BottomModal.vue";
-import BalanceInfo from "@/components/user/BalanceInfo.vue";
+import LiveChat from '@/components/shared/LiveChat.vue';
+import BalanceInfo from '@/components/user/BalanceInfo.vue';
+import BottomModal from '@/components/user/BottomModal.vue';
+import BottomNav from '@/components/user/BottomNav.vue';
+import HelpCenter from '@/components/user/HelpCenter.vue';
+import Tcs from '@/components/user/Tcs.vue';
+import TopSection from '@/components/user/TopSection.vue';
+import { usePusher } from '@/composables/usePusher';
+import { useUserStore } from '@/stores/user';
+import { router, usePage } from '@inertiajs/vue3';
+import { onBeforeMount, onMounted } from 'vue';
 
 const props = defineProps({
     title: String,
     guestTitle: String,
     guestText: {
         type: String,
-        default: "",
+        default: '',
     },
 });
 
 const page = usePage();
 const userStore = useUserStore();
-const { subscribeToUser, subscribeToUserAccount } = usePusher(
-    page.props.config.pusher,
-    userStore
-);
+const { subscribeToUser, subscribeToUserAccount } = usePusher(page.props.config.pusher, userStore);
 
 const isAuth = page.props.auth.user !== null;
 
 onBeforeMount(async () => {
     if (isAuth) {
         await userStore.fetchUser().then(() => {
-            const user = userStore.getData("user");
+            const user = userStore.getData('user');
 
             subscribeToUser(user.id || page.props.auth.user.id);
-            subscribeToUserAccount(
-                user.account.id || page.props.auth.user.account.id
-            );
+            subscribeToUserAccount(user.account.id || page.props.auth.user.account.id);
         });
     }
 });
@@ -57,35 +51,40 @@ onMounted(() => {
     }
 
     if (window.doGtranslate) {
-        console.log(window.doGtranslate)
+        console.log(window.doGtranslate);
     }
 });
 </script>
 
 <template>
-
     <Head :title="props.title || 'Welcome'" />
 
     <van-config-provider theme="light">
         <HelpCenter />
+        <LiveChat />
         <Tcs />
         <ScrollTop :threshold="200" :buttonProps="{ severity: 'contrast' }" />
 
         <!-- GUEST -->
-        <main v-if="!isAuth" class="container bg-white min-h-screen pb-8">
+        <main v-if="!isAuth" class="container min-h-screen bg-white pb-8">
             <div class="auth-card register">
-                <div class="text-center pt-8 px-6">
-                    <div class="flex justify-center items-center">
-                        <ApplicationLogo style="max-width: 30px; max-height: 30px"
-                            class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                        <h1 class="heading-1 font-semibold text-g60" translate="no">
+                <div class="px-6 pt-8 text-center">
+                    <div class="flex items-center justify-center">
+                        <!-- <ApplicationLogo
+                            style="max-width: 30px; max-height: 30px"
+                            class="block h-6 w-auto fill-current text-gray-800 dark:text-gray-200"
+                        /> -->
+                        <div class="z-[1020] flex max-w-[60px] items-center justify-center">
+                            <img src="/images/guiness-logo.png" alt="logo" />
+                        </div>
+                        <h1 class="heading-1 text-g60 font-semibold" translate="no">
                             {{ page.props.name }}
                         </h1>
                     </div>
-                    <h3 class="heading-3 font-semibold text-g60">
+                    <h3 class="heading-3 text-g60 font-semibold">
                         {{ props.guestTitle }}
                     </h3>
-                    <p class="text-sm text-g50 pt-3">
+                    <p class="text-g50 pt-3 text-sm">
                         {{ props.guestText }}
                     </p>
                 </div>
@@ -97,7 +96,7 @@ onMounted(() => {
         <!-- END GUEST -->
 
         <!-- AUTH -->
-        <main v-else class="container bg-white min-h-screen" :class="isAuth ? 'pt-2 pb-24' : 'pb-8'">
+        <main v-else class="container min-h-screen bg-white" :class="isAuth ? 'pb-24 pt-2' : 'pb-8'">
             <TopSection :title="props.title || page.props.name" />
 
             <!-- auth slot -->
