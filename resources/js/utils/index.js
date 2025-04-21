@@ -5,7 +5,7 @@ export function copyToClipboard(text) {
     if (!text) return;
 
     navigator.clipboard.writeText(text);
-    showToast("Copied to clipboard");
+    alert("Copied to clipboard");
 }
 
 export function handlePwdInput() {

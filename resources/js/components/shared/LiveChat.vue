@@ -1,7 +1,7 @@
 <template>
     <div
         id="livechat_trigger"
-        class="animate-fade-in-up fixed bottom-[65px] right-4 z-[1002] transform animate-pulse cursor-pointer rounded-sm bg-blue-600 text-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
+        class="animate-fade-in-up fixed bottom-[66px] right-4 z-[1002] transform animate-pulse cursor-pointer rounded-sm bg-blue-600 text-white shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
         @click="toggleChat"
     >
         <div class="flex items-center gap-1 p-1 px-2 md:p-3">
