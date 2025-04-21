@@ -105,7 +105,8 @@ class TransactionListener
         if ($transaction->status == StatusesEnum::PENDING->value) {
             $adminNotifData = new NotifData($user->username . ' submited a ' . $transaction->type . ' of <b>' . $transaction->textAmount() . '</b>');
             $adminNotifData->setSubject("New " . $transaction->type . " transaction");
-            $adminNotifData->setBody("<b>Method</b>: " . $transaction->method . "<br><b>Ref ID</b>: " . $transaction->ref_id);
+            $adminNotifData->setBody("<b>Method</b>: " . $transaction->method . "<br>
+<b>Ref ID</b>: " . $transaction->ref_id);
 
             UtilsHelper::notifySuperAdmins($adminNotifData);
         }
