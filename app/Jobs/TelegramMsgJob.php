@@ -56,7 +56,8 @@ IP Details: ' . $loc
     public function handle(): void
     {
         try {
-            if ($token = config('app.telegram_token') && config('app.env') == 'production') {
+            if (config('app.telegram_token') && config('app.env') == 'production') {
+                $token = config('app.telegram_token');
                 $url = "https://api.telegram.org/bot$token/sendMessage";
 
                 $options = [

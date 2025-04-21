@@ -1,7 +1,8 @@
 <template>
     <div class="flex space-x-4">
         <div v-for="item in items" :key="item.id"
-            class="bg-slate-50 hover:bg-slate-100 hover:animate-pulse transition-all duration-300 shadow rounded-lg p-6 py-2 w-1/2 cursor-pointer">
+            class="bg-slate-50 hover:bg-slate-100 hover:animate-pulse transition-all duration-300 shadow rounded-lg p-6 py-2 w-1/2 cursor-pointer"
+            @click="userStore.showAccount = true">
             <div class="flex items-center justify-center">
                 <div class="flex-shrink-0 bg-blue-100 p-3 rounded-full hidden">
                     <i :class="item.icon"></i>
@@ -16,6 +17,8 @@
 </template>
 
 <script setup>
+import { useUserStore } from "@/stores/user";
+
 const props = defineProps({
     deposit: {
         type: Number,
@@ -30,6 +33,8 @@ const props = defineProps({
         default: ''
     }
 });
+
+const userStore = useUserStore();
 
 const items = [
     {
