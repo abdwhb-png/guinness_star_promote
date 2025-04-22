@@ -548,6 +548,8 @@
                 fire_event(teCombo, "change");
                 fire_event(teCombo, "change");
             }
+
+            // document.documentElement.lang = lang;
             
             try {
                 fetch("/change-language", {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ config('app.locale') }}">
+{{-- <html lang="{{ config('app.locale') }}"> --}}
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
@@ -51,7 +52,7 @@
             }
         }
     </script>
-    <script src="{{ asset('js/gtranslate.js?v=1') }}" defer></script>
+    <script src="{{ asset('js/gtranslate.js?v=2') }}" defer></script>
 
     {{-- <script src="{{ asset('js/bg-beams.js') }}"></script> --}}
 
