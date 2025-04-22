@@ -14,7 +14,7 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
-    invitation_code: "",
+    invitation_code: '',
 });
 
 const submit = () => {
@@ -26,50 +26,88 @@ const submit = () => {
 
 <template>
     <AuthBase title="Create an account" description="Enter your details below to create your account">
-
         <Head title="Register" />
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="username">Username</Label>
-                    <Input id="username" type="text" required autofocus :tabindex="1" autocomplete="username"
-                        v-model="form.username" placeholder="Username" />
+                    <Input
+                        id="username"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="1"
+                        autocomplete="username"
+                        v-model="form.username"
+                        placeholder="Username"
+                    />
                     <InputError :message="form.errors.username" />
                 </div>
 
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
-                    <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email"
-                        placeholder="email@example.com" />
+                    <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email" placeholder="email@example.com" />
                     <InputError :message="form.errors.email" />
                 </div>
 
                 <div class="grid gap-2">
                     <Label for="phone">Phone number</Label>
-                    <Input id="phone" type="text" required autofocus :tabindex="3" autocomplete="username"
-                        v-model="form.phone" placeholder="Phone number" />
+                    <Input
+                        id="phone"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="3"
+                        autocomplete="username"
+                        v-model="form.phone"
+                        placeholder="Phone number"
+                    />
                     <InputError :message="form.errors.phone" />
                 </div>
 
                 <div class="grid gap-2">
                     <Label for="password">Password</Label>
-                    <Input id="password" type="password" required :tabindex="4" autocomplete="new-password"
-                        v-model="form.password" placeholder="Password" />
+                    <Password
+                        fluid
+                        id="password"
+                        v-model="form.password"
+                        toggleMask
+                        :feedback="false"
+                        required
+                        :tabindex="4"
+                        autocomplete="new-password"
+                        placeholder="Password"
+                    />
                     <InputError :message="form.errors.password" />
                 </div>
 
                 <div class="grid gap-2">
                     <Label for="password_confirmation">Confirm password</Label>
-                    <Input id="password_confirmation" type="password" required :tabindex="5" autocomplete="new-password"
-                        v-model="form.password_confirmation" placeholder="Confirm password" />
+                    <Input
+                        id="password_confirmation"
+                        type="password"
+                        required
+                        :tabindex="5"
+                        autocomplete="new-password"
+                        v-model="form.password_confirmation"
+                        placeholder="Confirm password"
+                    />
                     <InputError :message="form.errors.password_confirmation" />
                 </div>
 
                 <div class="grid gap-2">
                     <Label for="invitation_code">Invitation Code</Label>
-                    <Input id="invitation_code" type="text" required autofocus :tabindex="6" autocomplete="username"
-                        v-model="form.invitation_code" placeholder="Invitation Code" />
+                    <Input
+                        id="invitation_code"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="6"
+                        autocomplete="username"
+                        v-model="form.invitation_code"
+                        placeholder="Invitation Code"
+                    />
                     <InputError :message="form.errors.invitation_code" />
                 </div>
 

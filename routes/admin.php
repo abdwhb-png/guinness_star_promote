@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'index',
                 'store',
             ]);
-            Route::put('/roles-perms/{user:email}', [RolePermissionController::class, 'update'])->name('roles-perms.update');
+            Route::put('/roles-perms/{user}', [RolePermissionController::class, 'update'])->name('roles-perms.update');
         });
 });
 

@@ -1,37 +1,49 @@
 <template>
     <Card>
         <template #header>
-            <div class="p-3 flex justify-between">
-                <SearchFilter v-if="showSearch" class="mr-4 w-full max-w-md" v-model="form.search" :loading="loading"
-                    :filter-key="filterKey" :data-filters="dataFilters" @reset="reset">
+            <div class="flex justify-between p-3">
+                <SearchFilter
+                    v-if="showSearch"
+                    class="mr-4 w-full max-w-md"
+                    v-model="form.search"
+                    :loading="loading"
+                    :filter-key="filterKey"
+                    :data-filters="dataFilters"
+                    @reset="reset"
+                >
                     <template #filterContent>
                         <DropdownMenuRadioGroup v-model="form[filterKey]">
                             <slot name="filterContent" />
                         </DropdownMenuRadioGroup>
                     </template>
                 </SearchFilter>
-                <Pagination v-model="form.per_page" :paginated="paginated" :show-items-selection="false" />
             </div>
         </template>
 
         <template #title>
             {{ title }}
-            <span class="text-sm font-normal">{{ `${paginated?.total || "0"} records found` }}</span>
+            <span class="text-sm font-normal">{{ `${paginated?.total || '0'} records found` }}</span>
         </template>
 
-
         <template #content>
-            <DataTable class="w-full" v-bind="$attrs" ref="dt" :value="data" v-model:filters="filters" scrollable
-                :scrollHeight="scrollHeight" showGridlines @sort="onSort" @filter="onFilter">
+            <DataTable
+                class="w-full"
+                v-bind="$attrs"
+                ref="dt"
+                :value="data"
+                v-model:filters="filters"
+                scrollable
+                :scrollHeight="scrollHeight"
+                showGridlines
+                @sort="onSort"
+                @filter="onFilter"
+            >
                 <template #empty>
                     <slot name="empty">
-                        <div
-                            class="flex items-center grow rounded-xl border border-dashed gap-4 p-4 border-primary bg-secondary-light">
+                        <div class="bg-secondary-light flex grow items-center gap-4 rounded-xl border border-dashed border-primary p-4">
                             <Info />
                             <div class="flex flex-col gap-0.5">
-                                <p class="text text-2sm font-normal">
-                                    No records found
-                                </p>
+                                <p class="text text-2sm font-normal">No records found</p>
                             </div>
                         </div>
                     </slot>
@@ -55,14 +67,19 @@
                 <!-- End Content -->
 
                 <!-- Creation Date -->
-                <Column v-if="showCreationDate" field="created_at" header="Creation date" sortable
-                    style="max-width: 11rem">
+                <Column v-if="showCreationDate" field="created_at" header="Creation date" sortable style="max-width: 11rem">
                     <template #body="{ data, field }">
-                        {{ data[field] }}
+                        {{ data[field] || '--' }}
                     </template>
+                    <!-- Note: PrimeVue date filter inputs currently filter client-side only -->
                     <template #filter="{ filterModel, filterCallback }">
-                        <InputText style="min-width: 5rem; max-width: 7rem" size="small" v-model="filterModel.value"
-                            @input="filterCallback()" placeholder="dd/mm/yyyy" />
+                        <InputText
+                            style="min-width: 5rem; max-width: 7rem"
+                            size="small"
+                            v-model="filterModel.value"
+                            @input="filterCallback()"
+                            placeholder="YYYY-MM-DD"
+                        />
                     </template>
                 </Column>
                 <!-- End Creation Date -->
@@ -70,11 +87,17 @@
                 <!-- Update Date -->
                 <Column v-if="showUpdateDate" field="updated_at" header="Last update" style="max-width: 11rem" sortable>
                     <template #body="{ data, field }">
-                        {{ data[field] }}
+                        {{ data[field] || '--' }}
                     </template>
+                    <!-- Note: PrimeVue date filter inputs currently filter client-side only -->
                     <template #filter="{ filterModel, filterCallback }">
-                        <InputText style="min-width: 5rem; max-width: 7rem" size="small" v-model="filterModel.value"
-                            @input="filterCallback()" placeholder="dd/mm/yyyy" />
+                        <InputText
+                            style="min-width: 5rem; max-width: 7rem"
+                            size="small"
+                            v-model="filterModel.value"
+                            @input="filterCallback()"
+                            placeholder="YYYY-MM-DD"
+                        />
                     </template>
                 </Column>
                 <!-- End Update Date -->
@@ -94,43 +117,52 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, reactive } from "vue";
-import { scrollHeight } from "@/utils/dataTable";
-import { LaravelPagination } from "@/types";
-import { FilterMatchMode } from "@primevue/core/api";
-import { router } from "@inertiajs/vue3";
-import throttle from 'lodash/throttle';
+import { DropdownMenuRadioGroup } from '@/components/ui/dropdown-menu'; // Moved import
+import { LaravelPagination } from '@/types'; // Removed TableItem import
+import { scrollHeight } from '@/utils/dataTable';
+import { router } from '@inertiajs/vue3';
+import { FilterMatchMode } from '@primevue/core/api';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import pickBy from 'lodash/pickBy';
-import mapValues from 'lodash/mapValues';
-import dayjs from "dayjs";
-import { Info, Loader2 } from "lucide-vue-next";
-import SearchFilter from "./SearchFilter.vue";
-import Pagination from "../shared/Pagination.vue";
-import {
-    DropdownMenuRadioGroup,
-} from '@/components/ui/dropdown-menu'
+import throttle from 'lodash/throttle';
+import { Info, Loader2 } from 'lucide-vue-next';
+import { reactive, ref, watch } from 'vue';
+import Pagination from '../shared/Pagination.vue';
+import SearchFilter from './SearchFilter.vue';
+
+// Extend dayjs with the relativeTime plugin to enable fromNow() functionality
+dayjs.extend(relativeTime);
+
+// Define TableItem locally (or move to your @/types file)
+interface TableItem {
+    id: number | string;
+    created_at?: string | null;
+    updated_at?: string | null;
+    [key: string]: any;
+}
 
 defineOptions({
     inheritAttrs: false,
 });
 
-const emits = defineEmits(["searched"]);
+const emits = defineEmits(['searched']);
 
 const props = defineProps({
     title: {
         type: String,
-        default: "Liste",
+        default: 'Liste',
     },
     paginated: {
-        type: Object as () => LaravelPagination<any>,
+        type: Object as () => LaravelPagination<TableItem>,
         required: false,
-        default: () => { },
+        default: null,
     },
     dataFilters: Object,
     filters: {
         type: Object,
         required: false,
-        default: () => { },
+        default: () => ({}),
     },
     filterKey: String,
     showSearch: {
@@ -155,16 +187,17 @@ const props = defineProps({
     },
 });
 
-const data = ref<any[]>([]);
+const data = ref<TableItem[]>([]);
 const loading = ref(false);
-const form = reactive({
+const form = reactive<Record<string, any>>({
+    // Added type annotation for form
     search: props.dataFilters?.search,
     per_page: props.paginated?.per_page,
     sort: props.dataFilters?.sort,
 });
 
 if (props.filterKey) {
-    form[props.filterKey] = props.dataFilters[props.filterKey];
+    form[props.filterKey] = props.dataFilters?.[props.filterKey]; // Added optional chaining
 }
 
 const filters = ref<Record<string, any>>(props.filters ?? {});
@@ -181,44 +214,77 @@ initFilters();
 const onSort = (event: any) => {
     form.sort = {
         field: event.sortField,
-        order: event.sortOrder === 1 ? 'asc' : 'desc'
+        order: event.sortOrder === 1 ? 'asc' : 'desc',
     };
 };
 
-const onFilter = (event: any) => {
-    // console.log(event.filters);
+// PrimeVue column filters (e.g., date inputs) operate on the currently displayed data (client-side).
+// They do not trigger new backend requests via Inertia.
+const onFilter = (_event: any) => {
+    // Added underscore to mark event as unused
+    // console.log('Client-side filters applied:', event.filters);
 };
 
 const reset = () => {
-    Object.assign(form, mapValues(form, () => null));
+    // Create a temporary object with null values for all keys in the initial form structure
+    const initialFormKeys = ['search', 'per_page', 'sort'];
+    if (props.filterKey) {
+        initialFormKeys.push(props.filterKey);
+    }
+    const resetValues = initialFormKeys.reduce(
+        (acc, key) => {
+            acc[key] = null;
+            return acc;
+        },
+        {} as Record<string, any>,
+    );
+
+    // Assign the reset values back to the form
+    Object.assign(form, resetValues);
+
+    // Also reset PrimeVue filters if needed
+    initFilters();
 };
 
-watch(() => props.paginated?.data, (newData) => {
-    const tab = Array.isArray(newData) ? newData : [];
-    data.value = tab.map((item: any) => ({
-        ...item,
-        created_at: parseDate(item.created_at),
-        updated_at: parseDate(item.updated_at, 'humanReadable'),
-    }));
-}, { immediate: true });
+watch(
+    () => props.paginated?.data,
+    (newData) => {
+        const tab: TableItem[] = Array.isArray(newData) ? newData : [];
+        data.value = tab.map((item: TableItem) => ({
+            ...item,
+            created_at: parseDate(item.created_at),
+            updated_at: parseDate(item.updated_at, 'humanReadable'),
+        }));
+    },
+    { immediate: true },
+);
 
-watch(form,
+watch(
+    form,
     throttle(() => {
-        const url = route(route().current());
-        router.get(url, pickBy(form), {
+        const currentRoute = route().current();
+        if (!currentRoute) {
+            console.error('Could not determine the current route.');
+            return; // Exit if route name is undefined
+        }
+        const url = route(currentRoute);
+        const activeFilters = pickBy(form, (value: any) => value !== null && value !== ''); // Added type annotation
+        router.get(url, activeFilters, {
             preserveState: true,
             onStart: () => (loading.value = true),
             onFinish: () => (loading.value = false),
-        })
-        // emits('searched', pickBy(form.value, (value) => value !== null && value !== ''));
+        });
+        emits('searched', activeFilters);
     }, 150),
-    { deep: true });
+    { deep: true },
+);
 
-function parseDate(date: string, format = 'default') {
-    if (!date) return "--";
-    if (format == 'humanReadable') {
-        return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
+// Simplified date parsing
+function parseDate(date: string | null | undefined, format = 'default'): string | null {
+    if (!date) return null;
+    if (format === 'humanReadable') {
+        return dayjs(date).fromNow();
     }
-    return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
-};
+    return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+}
 </script>

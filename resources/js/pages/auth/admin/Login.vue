@@ -16,8 +16,8 @@ const props = defineProps<{
 }>();
 
 const form = useForm({
-    username: props.defaultEmail || "",
-    password: props.defaultEmail ? "password" : "",
+    username: props.defaultEmail || '',
+    password: props.defaultEmail ? 'password' : '',
     remember: false,
 });
 
@@ -30,7 +30,6 @@ const submit = () => {
 
 <template>
     <AuthBase title="Log in to your account" description="Enter your credentials below to log in">
-
         <Head title="Log in" />
 
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
@@ -41,21 +40,37 @@ const submit = () => {
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="username">Email or Username</Label>
-                    <Input id="username" type="text" required autofocus :tabindex="1" autocomplete="username"
-                        v-model="form.username" placeholder="Enter email or username" />
+                    <Input
+                        id="username"
+                        type="text"
+                        required
+                        autofocus
+                        :tabindex="1"
+                        autocomplete="username"
+                        v-model="form.username"
+                        placeholder="Enter email or username"
+                    />
                     <InputError :message="form.errors.username" />
                 </div>
 
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
                         <Label for="password">Password</Label>
-                        <TextLink v-if="canResetPassword" :href="route('password.request')" class="text-sm"
-                            :tabindex="5">
+                        <TextLink v-if="canResetPassword" :href="route('password.request')" class="text-sm" :tabindex="5">
                             Forgot password?
                         </TextLink>
                     </div>
-                    <Input id="password" type="password" required :tabindex="2" autocomplete="current-password"
-                        v-model="form.password" placeholder="Password" />
+                    <Password
+                        fluid
+                        id="password"
+                        v-model="form.password"
+                        toggleMask
+                        :feedback="false"
+                        autocomplete="current-password"
+                        placeholder="Password"
+                    />
+                    <!-- <Input id="password" type="password" required :tabindex="2" autocomplete="current-password"
+                        v-model="form.password" placeholder="Password" /> -->
                     <InputError :message="form.errors.password" />
                 </div>
 

@@ -3,10 +3,12 @@
 namespace App\Trait;
 
 use App\Enums\ConfigEnum;
+use App\Enums\RolesEnum;
+use App\Helpers\ConfigHelper;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
-use App\Helpers\ConfigHelper;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 trait ValidationRules
 {
@@ -25,33 +27,35 @@ trait ValidationRules
     {
         return [
             'password' => 'required',
-            'type' => 'required|in:' . implode(',', ConfigHelper::getPasswordTypes()),
+            'type' => ['required', Rule::in(ConfigHelper::getPasswordTypes())],
         ];
     }
 
     public function updatePasswordRules(): array
     {
+        $required = Auth::check() && Auth::user()->isSuperAdmin() ? 'sometimes' : 'required';
         return [
-            'current_password' => 'required',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'type' => 'required|in:' . implode(',', ConfigHelper::getPasswordTypes()),
+            'current_password' => 'sometimes',
+            'password' => [$required, 'confirmed', Rules\Password::defaults()],
+            'type' => [$required, Rule::in(ConfigHelper::getPasswordTypes())],
         ];
     }
 
-    public function userRules($user, $action = 'store'): array
+    public function userRules($user = null, $action = 'store'): array
     {
         $rules = [
             'name' => 'nullable|string|max:255',
-            'username' => 'nullable|string|max:255|' . Rule::unique('users', 'username')->ignore($user->id),
-            'email' => 'nullable|email|max:255|' . Rule::unique('users', 'email')->ignore($user->id),
-            'phone' => 'sometimes|numeric|' . Rule::unique('users', 'phone')->ignore($user->id),
+            'username' => 'sometimes|string|max:255|' . Rule::unique('users', 'username')->ignore($user?->id),
+            'email' => 'nullable|email|max:255|' . Rule::unique('users', 'email')->ignore($user?->id),
+            'phone' => 'sometimes|numeric|' . Rule::unique('users', 'phone')->ignore($user?->id),
             'password' => ['sometimes', 'confirmed', Rules\Password::defaults()],
             'invitation_code' => 'sometimes|string|exists:user_accounts,account_no|max:255',
+            'role' => 'sometimes|string|' . Rule::in(RolesEnum::cases()),
 
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'gender' => 'nullable|in:male,female,other',
-            'phone_number' => ['nullable', 'string', Rule::unique('user_infos', 'phone_number')->ignore($user->info->id)],
+            'phone_number' => ['nullable', 'string', Rule::unique('user_infos', 'phone_number')->ignore($user?->info->id)],
         ];
 
         if ($action == 'update') {

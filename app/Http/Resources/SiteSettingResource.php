@@ -2,12 +2,13 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\StatusesEnum;
-use App\Helpers\ConfigHelper;
-use App\Models\CustomerService;
 use App\Models\Membership;
+use App\Enums\StatusesEnum;
+use Illuminate\Support\Arr;
 use App\Trait\ResourceTrait;
 use Illuminate\Http\Request;
+use App\Helpers\ConfigHelper;
+use App\Models\CustomerService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SiteSettingResource extends JsonResource
@@ -24,7 +25,7 @@ class SiteSettingResource extends JsonResource
         return [
             'appEnv' => config('app.env'),
             'appName' => config('app.name'),
-            'app' => config('app'),
+            'app' =>  Arr::only(config('app'), ['env', 'name', 'url']),
             'settings' => parent::toArray($request),
             'enableVip' => ConfigHelper::ENABLE_VIP,
             'csLinks' => CustomerService::whereNotNull('url')->get(),

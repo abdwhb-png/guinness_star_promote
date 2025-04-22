@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Enums\RolesEnum;
 use App\Jobs\ResetDealJob;
 use App\Enums\StatusesEnum;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Trait\ValidationRules;
 use Illuminate\Support\Facades\DB;
@@ -79,6 +80,7 @@ class UsersController extends BaseController
             'filters' => FacadesRequest::all('search', 'sort'),
             'dealHasNegative' => false,
             'can' => [
+                'create_user' => auth()->user()->isSuperAdmin(),
                 'edit_user' => auth()->user()->isSuperAdmin(),
                 'delete_user' => auth()->user()->isSuperAdmin(),
                 'manage_admins' => auth()->user()->isSuperAdmin(),
@@ -88,6 +90,9 @@ class UsersController extends BaseController
                 ->paginate($this->perPage())
                 ->withQueryString()
                 ->through(fn($item) => $this->parseUser($item)),
+            'roles' => collect(RolesEnum::cases())
+                ->filter(fn($role) => $role->value !== RolesEnum::ROOT->value)
+                ->all(),
             'admins' => fn() => $this->getAdmins(),
         ]);
     }

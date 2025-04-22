@@ -29,10 +29,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifications', [NotificationController::class, 'deleteAll'])->name('notifications.delete');
 
     Route::prefix('user')->as('user.')->controller(UserController::class)->group(function () {
-        Route::put('/password/{user?}', 'updatePassword')->name('password.update');
         Route::put('/profile-photo', 'updateProfilePhoto')->name('profile-photo.update');
-        Route::put('/info/{user?}', 'updateInfo')->name('info.update');
-        Route::put('/payment-method/{user?}', 'updatePaymentMethod')->name('payment-method.update');
+        Route::put('/password/{id?}', 'updatePassword')->name('password.update');
+        Route::put('/info/{id?}', 'updateInfo')->name('info.update');
+        Route::put('/payment-method/{id?}', 'updatePaymentMethod')->name('payment-method.update');
 
         Route::get('/deals/{id?}', 'deals')->name('deals');
         Route::get('/transactions/{id?}', 'transactions')->name('transactions');
@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class)->only([
         'index',
         'show',
+        'store',
         'update',
         // 'destroy',
     ]);

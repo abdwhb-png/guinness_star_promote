@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use App\Trait\ValidationRules;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Validation\ValidationException;
 use Cjmellor\BrowserSessions\Facades\BrowserSessions;
 
@@ -28,30 +30,27 @@ class UserController extends BaseController
         return new UserResource($user);
     }
 
-    public function transactions(int $id = 0)
+    public function store(Request $request)
     {
-        $user = $id == 0 ? request()->user() : User::findOrfail($id);
-        return $user->getTransactions();
+        $validated = $request->validate($this->userRules());
+
+        $user = User::create([
+            'invited_by' => Auth::id() ?? null,
+            'phone' => $validated['phone'],
+            'username' => $validated['username'],
+            'email' => $validated['email'] ?? null,
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        $user->assignRole($validated['role'] ?? RolesEnum::USER->value);
+        event(new Registered($user));
+
+        return back(303)->with('success', 'User created successfully');
     }
 
-    public function deals(int $id = 0)
+    public function update(Request $request, int $id = 0)
     {
-        $user = $id == 0 ? request()->user() : User::findOrfail($id);
-        return $user->getDeals();
-    }
-
-    public function destroy(int $id = 0)
-    {
-        $user = $id == 0 ? request()->user() : User::findOrfail($id);
-
-        $user->deleteQuietly();
-
-        return back(303)->with('status', 'User deleted successfully');
-    }
-
-    public function update(Request $request, $user = null)
-    {
-        $user = User::find($user) ?? $request->user();
+        $user = $id ? User::findOrFail($id) : $request->user();
 
         $request->validate(['section' => 'required|in:password,account,withdrawal_password,info,payment_method']);
         $validated = $request->validate($this->userRules($user, 'update'));
@@ -84,9 +83,9 @@ class UserController extends BaseController
         return back(303)->with('status', 'The ' . $request->section . ' has been updated for ' . $user->call_name);
     }
 
-    public function updateInfo(Request $request, $user = null)
+    public function updateInfo(Request $request, int $id = 0)
     {
-        $user = $user ?? $request->user();
+        $user = $id ? User::findOrFail($id) : $request->user();
 
         $validated = request()->validate($this->userRules($user));
 
@@ -106,24 +105,23 @@ class UserController extends BaseController
         return back(303)->with('status', 'Profile information updated successfully');
     }
 
-    public function updatePassword(Request $request, $user = null)
+    public function updatePassword(Request $request, int $id = 0)
     {
-        $user = $user ?? $request->user();
+        $user = $id ? User::findOrFail($id) : $request->user();
 
         $validated = $request->validate($this->updatePasswordRules());
 
-        if (!$user->checkPassword($validated['type'], $validated['current_password'])) {
+        if ($request->current_password && !$user->checkPassword($validated['type'], $validated['current_password'])) {
             throw ValidationException::withMessages([
                 'current_password' => ['The current password is incorrect.']
             ]);
         }
 
-        if ($validated['type'] == 'login') {
-            $user->update(['password' => Hash::make($validated['password'])]);
-        }
-
-        if ($validated['type'] == 'withdrawal') {
+        if ($request->type == 'withdrawal') {
             $user->account->update(['withdrawal_password' => Hash::make($validated['password'])]);
+        }
+        if ($request->type == 'login') {
+            $user->update(['password' => Hash::make($validated['password'])]);
         }
 
         return back(303)->with('status', 'Password updated successfully');
@@ -142,6 +140,27 @@ class UserController extends BaseController
         ]);
 
         return back(303)->with('status', 'Payment method updated successfully');
+    }
+
+    public function transactions(int $id = 0)
+    {
+        $user = $id == 0 ? request()->user() : User::findOrfail($id);
+        return $user->getTransactions();
+    }
+
+    public function deals(int $id = 0)
+    {
+        $user = $id == 0 ? request()->user() : User::findOrfail($id);
+        return $user->getDeals();
+    }
+
+    public function destroy(int $id = 0)
+    {
+        $user = $id == 0 ? request()->user() : User::findOrfail($id);
+
+        $user->deleteQuietly();
+
+        return back(303)->with('status', 'User deleted successfully');
     }
 
     public function sessionsGet()
