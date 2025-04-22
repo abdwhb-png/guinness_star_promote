@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\NotifData;
-use App\Http\Helpers\UtilsHelper;
+use App\Helpers\UtilsHelper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,9 +32,10 @@ class TelegramMsgJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(NotifData $notifData)
+    public function __construct(NotifData $notifData, $ip = '')
     {
-        $loc = 'https://whatismyipaddress.com/ip/' . request()->ip();
+        $ip_address = $ip ?? request()->ip() != '127.0.0.1' ? request()->ip() : '';
+        $locDetails = $ip_address ? 'IP Details: https://whatismyipaddress.com/ip/' . $ip_address : '';
 
         $this->data = [
             'chat_id' => config('app.telegram_chat_id'),
@@ -46,7 +47,7 @@ class TelegramMsgJob implements ShouldQueue
 ' . $this->parseHtmlForTelegram($notifData->getBody()) . '
 
 System Time: <i>' . now() . '</i>
-IP Details: ' . $loc
+' . $locDetails
         ];
     }
 
