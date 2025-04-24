@@ -7,6 +7,7 @@ use App\Models\UserInfo;
 use App\Events\UserEvent;
 use App\Models\UserAccount;
 use Illuminate\Support\Str;
+use App\Helpers\ConfigHelper;
 use App\Jobs\RegistrationJob;
 
 class UserObserver
@@ -30,6 +31,9 @@ class UserObserver
             ],
             [
                 'account_no' => strtoupper(substr(Str::uuid(), 0, 8)),
+                'currency' => ConfigHelper::getDefaultCurrency(),
+                'profit_ratio' => ConfigHelper::getProfitRatio(),
+                'max_deals' => ConfigHelper::getMaxDeals(),
             ]
         );
 

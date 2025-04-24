@@ -55,13 +55,13 @@ class UsersController extends BaseController
 
     protected function getAdmins()
     {
-        if (!auth()->user()->isSuperAdmin()) {
+        if (!Auth::user()->isSuperAdmin()) {
             return [];
         }
 
-        $query = User::where('id', '!=', auth()->id())->withoutRole(RolesEnum::USER->value);
+        $query = User::where('id', '!=', Auth::id())->withoutRole(RolesEnum::USER->value);
 
-        if (!auth()->user()->hasRole(RolesEnum::ROOT->value)) {
+        if (!Auth::user()->hasRole(RolesEnum::ROOT->value)) {
             $query->withoutRole(RolesEnum::ROOT->value);
         }
 
@@ -75,15 +75,16 @@ class UsersController extends BaseController
     public function index()
     {
         $query = User::where('id', '!=', Auth::id())->role(RolesEnum::USER->value);
+        $user = Auth::user();
 
         return Inertia::render(page_dir() . 'Users', [
             'filters' => FacadesRequest::all('search', 'sort'),
             'dealHasNegative' => false,
             'can' => [
-                'create_user' => auth()->user()->isSuperAdmin(),
-                'edit_user' => auth()->user()->isSuperAdmin(),
-                'delete_user' => auth()->user()->isSuperAdmin(),
-                'manage_admins' => auth()->user()->isSuperAdmin(),
+                'create_user' => $user->isSuperAdmin(),
+                'edit_user' => $user->isSuperAdmin(),
+                'delete_user' => $user->isSuperAdmin(),
+                'manage_admins' => $user->isSuperAdmin(),
             ],
             'users' => $query->latest()
                 ->filter(FacadesRequest::only('search', 'sort'))

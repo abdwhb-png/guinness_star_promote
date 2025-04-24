@@ -88,14 +88,14 @@ class TransactionsController extends BaseController
             $transaction = $user->account->giveMoney($request->amount, $request->type);
         }
 
-        if (empty($transaction)) {
+        if (!isset($transaction)) {
             throw ValidationException::withMessages([
                 'error' => 'Transaction creation failed',
             ]);
         }
 
         $account = $user->account;
-        if ($user->detailedDeals()->counts['total'] && $account->canHaveDeals()) {
+        if ($user->detailedDeals()->counts['total'] == 0 && $account->canHaveDeals()) {
             ResetDealJob::dispatchSync($account);
         }
 
