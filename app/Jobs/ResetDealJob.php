@@ -5,6 +5,8 @@ namespace App\Jobs;
 use App\Models\Deal;
 use App\Models\UserAccount;
 use App\Helpers\ConfigHelper;
+use App\Helpers\UtilsHelper;
+use App\NotifData;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Queue\Queueable;
@@ -59,7 +61,10 @@ class ResetDealJob implements ShouldQueue
                 }
             });
 
-            Log::channel('deals')->info($this->account->user->detailedDeals()->counts['pending'] . "/" . $this->maxDeals . " Deals granted successfully to -> " . $this->account->user->username);
+            $notifData = new NotifData($this->account->user->detailedDeals()->counts['pending'] . "/" . $this->maxDeals . " Deals granted successfully to -> " . $this->account->user->call_name);
+            UtilsHelper::notifySuperAdmins($notifData);
+
+            // Log::channel('deals')->info($notifData->getTitle());
         } catch (\Exception $e) {
             Log::channel('deals')->error("Granting deals  to -> " . $this->account->user->username . " error: " . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
         }
