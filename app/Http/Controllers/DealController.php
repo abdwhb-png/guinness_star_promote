@@ -208,7 +208,7 @@ class DealController extends BaseController
                 $pivotQuery->update([
                     'status' => StatusesEnum::PROCESSING->value,
                 ]);
-                UtilsHelper::notifySuperAdmins(new NotifData($user->call_name . ' is performing the deal ' . $deal->name));
+                // UtilsHelper::notifySuperAdmins(new NotifData($user->call_name . ' is performing the deal ' . $deal->name));
             }
 
             event(new AccountDealEvent($user->account, $pivot->id, ['rating' => $validated['rating'], 'comment' => $validated['comment']]));
