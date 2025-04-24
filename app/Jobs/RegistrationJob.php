@@ -24,7 +24,8 @@ class RegistrationJob implements ShouldQueue
     public function __construct(int $id, public $bonus = null)
     {
         $this->user = User::find($id);
-        if ($referer = User::find($this->user->invited_by) && site_setting('enable_referral_bonus')) {
+        $referer = User::find($this->user->invited_by);
+        if ($referer && site_setting('enable_referral_bonus')) {
             // notify referer about referral bonus
             $transac = $referer->account->giveMoney(ConfigHelper::getWelcomeBonus(), TransacEnum::BONUS->value);
 
