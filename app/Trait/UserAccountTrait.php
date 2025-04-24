@@ -48,11 +48,11 @@ trait UserAccountTrait
         );
     }
 
-    public function canHaveDeals() : bool
+    public function canHaveDeals(): bool
     {
-        return $this->deposit > 0 && $this->user->detailedDeals()->counts['total'] == 0;
+        return $this->deposit >= site_setting('min_balance')  && $this->user->detailedDeals()->counts['total'] == 0;
     }
-    
+
     // public function isFrozed(): bool
     // {
     //     return $this->user->isFrozed();

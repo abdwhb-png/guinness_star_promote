@@ -11,6 +11,7 @@ use App\Models\Transaction;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Trait\ValidationRules;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Request as FacadesRequest;
@@ -28,8 +29,8 @@ class TransactionsController extends BaseController
             'filters' => FacadesRequest::all('search', 'type', 'sort'),
             'types' => TransacEnum::cases(),
             'can' => [
-                'edit_transaction' => auth()->user()->isSuperAdmin(),
-                'delete_transaction' => auth()->user()->isSuperAdmin(),
+                'edit_transaction' => Auth::user()->isSuperAdmin(),
+                'delete_transaction' => Auth::user()->isSuperAdmin(),
             ],
             'shouldNotEdit' => [
                 StatusesEnum::SYSTEM->value,
@@ -94,8 +95,8 @@ class TransactionsController extends BaseController
             ]);
         }
 
-        $account = $user->account;
-        if ($user->detailedDeals()->counts['total'] == 0 && $account->canHaveDeals()) {
+        $account = $user->account->refresh();
+        if ($account->canHaveDeals()) {
             ResetDealJob::dispatchSync($account);
         }
 
