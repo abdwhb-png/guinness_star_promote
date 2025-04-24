@@ -95,10 +95,12 @@ class TransactionsController extends BaseController
             ]);
         }
 
-        $account = $user->account->refresh();
-        if ($account->canHaveDeals()) {
-            ResetDealJob::dispatchSync($account);
-        }
+        defer(function () use ($user) {
+            $account = $user->account->refresh();
+            if ($account->canHaveDeals()) {
+                ResetDealJob::dispatchSync(account: $account, reset: true);
+            }
+        });
 
         return back(303)->with('success', 'Transaction created successfully');
     }
